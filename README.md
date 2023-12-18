@@ -31,6 +31,6 @@ Bem vindo a esse repositório! Aqui, estou compartilhando aguns notebooks de Dat
 
 ## Deep Learning com Tensorflow
 
-1. Modelagem híbrida de Self-Organizing Maps com redes neurais para classificação
-2. Redes neurais convolucionais
-3. Transfer learning
+1. [Modelagem híbrida de Self-Organizing Maps com redes neurais para classificação](https://github.com/IAugustoMZ/aulasDataScience/blob/main/deep_learning/0_SOM%2BANN.ipynb)
+2. [Redes neurais convolucionais](https://github.com/IAugustoMZ/aulasDataScience/blob/main/deep_learning/1_redes_neurais_convolucionais.ipynb)
+3. [Transfer learning](https://github.com/IAugustoMZ/aulasDataScience/blob/main/deep_learning/2_transfer_learning.ipynb)
