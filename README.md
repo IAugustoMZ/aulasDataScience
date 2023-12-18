@@ -6,21 +6,21 @@ Bem vindo a esse repositório! Aqui, estou compartilhando aguns notebooks de Dat
 
 ## Técnicas de Classificação
 
-1. Introdução à Classificação
-2. Regressão Logística
-3. Análise da Fronteira de Decisão
-4. Árvores de Decisão e Validação Cruzada
-5. Máquinas Suportadas por Vetor (SVM)
-6. Projeto de Data Science de Classificação
+1. [Introdução à Classificação](https://github.com/IAugustoMZ/aulasDataScience/blob/main/classificacao/1_introducao_classificacao.ipynb)
+2. [Regressão Logística](https://github.com/IAugustoMZ/aulasDataScience/blob/main/classificacao/2_regressao_logistica.ipynb)
+3. [Análise da Fronteira de Decisão](https://github.com/IAugustoMZ/aulasDataScience/blob/main/classificacao/3_analise_fronteira_decisao.ipynb)
+4. [Árvores de Decisão e Validação Cruzada](https://github.com/IAugustoMZ/aulasDataScience/blob/main/classificacao/4_arvores_de_decisao_validacao_cruzada.ipynb)
+5. [Máquinas Suportadas por Vetor (SVM)](https://github.com/IAugustoMZ/aulasDataScience/blob/main/classificacao/5_maquinas_suportadas_vetor.ipynb)
+6. [Projeto de Data Science de Classificação](https://github.com/IAugustoMZ/aulasDataScience/blob/main/classificacao/projeto_data_science.ipynb)
 
 ## Técnicas de Clusterização
 
-1. Estudo de Caso para Agrupamentos
-2. KMeans
-3. Mini Projeto de Clusterização
-4. Clusterização Hierárquica
-5. DBSCAN
-6. Projeto para comparação de técnicas de agrupamento
+1. [Estudo de Caso para Agrupamentos](https://github.com/IAugustoMZ/aulasDataScience/blob/main/clusterizacao/1_estudo_caso_agrupamento.ipynb)
+2. [KMeans](https://github.com/IAugustoMZ/aulasDataScience/blob/main/clusterizacao/2_KMeans.ipynb)
+3. [Mini Projeto de Clusterização](https://github.com/IAugustoMZ/aulasDataScience/blob/main/clusterizacao/3_mini-projeto-clusterizacao.ipynb)
+4. [Clusterização Hierárquica](https://github.com/IAugustoMZ/aulasDataScience/blob/main/clusterizacao/4_clusterizacao_hierarquica.ipynb)
+5. [DBSCAN](https://github.com/IAugustoMZ/aulasDataScience/blob/main/clusterizacao/5_dbscan.ipynb)
+6. [Projeto para comparação de técnicas de agrupamento](https://github.com/IAugustoMZ/aulasDataScience/blob/main/clusterizacao/6_projeto_comparacao_clusterizacao.ipynb)
 
 ## Redes Neurais com Tensorflow
 
