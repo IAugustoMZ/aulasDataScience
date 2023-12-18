@@ -24,10 +24,10 @@ Bem vindo a esse repositório! Aqui, estou compartilhando aguns notebooks de Dat
 
 ## Redes Neurais com Tensorflow
 
-1. Redes Neurais
-2. Projeto de classificação com redes neurais
-3. Projeto de regressão com redes neurais
-4. Redes neurais aplicadas às séries temporais
+1. [Redes Neurais](https://github.com/IAugustoMZ/aulasDataScience/blob/main/redes_neurais/1_redes_neurais.ipynb)
+2. [Projeto de classificação com redes neurais](https://github.com/IAugustoMZ/aulasDataScience/blob/main/redes_neurais/2_projeto_ann_classificacao.ipynb)
+3. [Projeto de regressão com redes neurais](https://github.com/IAugustoMZ/aulasDataScience/blob/main/redes_neurais/3_projeto_ann_regressao.ipynb)
+4. [Redes neurais aplicadas às séries temporais](https://github.com/IAugustoMZ/aulasDataScience/blob/main/redes_neurais/4_redes_neurais_series_temporais.ipynb)
 
 ## Deep Learning com Tensorflow
 
