@@ -1,1 +1,17 @@
 deep_learning/data
+
+# Secrets — never commit credentials
+secrets.env
+**/secrets.env
+
+# Pipeline data outputs
+**/data/raw/
+**/data/processed/
+pipeline.log
+
+ds_env
+
+**/.claude
+CLAUDE.md
+
+aula02

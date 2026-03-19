@@ -1,0 +1,30 @@
+# data.yaml — Dataset-specific configuration
+# Controls Kaggle source, file discovery, ingestion behavior, and schema
+
+kaggle:
+  dataset: "shibumohapatra/house-price"
+  file_pattern: "*.csv"
+  expected_files: []
+  expected_count: null
+
+ingest:
+  output_format: "parquet"
+  compression: "snappy"
+  chunk_size_rows: 50000
+  convert_dtypes: true         # Attempt automatic dtype inference (pyarrow)
+  validate_schema: true        # Fail loudly on missing required columns
+
+schema:
+  # Required columns — pipeline fails loudly if any are missing post-ingest
+  # Column names from the shibumohapatra/house-price dataset (California Housing)
+  required_columns:
+    - "median_house_value"
+    - "median_income"
+    - "housing_median_age"
+    - "total_rooms"
+    - "total_bedrooms"
+    - "population"
+    - "households"
+    - "latitude"
+    - "longitude"
+    - "ocean_proximity"

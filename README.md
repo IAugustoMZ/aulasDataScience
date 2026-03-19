@@ -108,6 +108,46 @@ Advanced module covering specialized Deep Learning architectures: convolutional 
 
 ---
 
+---
+
+## 6. MLOps — Model Operationalization
+
+Practical module on MLOps engineering, covering the full lifecycle from data ingestion to model deployment. Focuses on production-grade pipelines, reproducibility, and engineering best practices.
+
+| # | Content | Description |
+|---|---------|-------------|
+| 1 | [Aula 01 — Intro to MLOps](operacionalizacao_modelos_mlops/aula01/operacionalizacao_modelos_mlops_aula01.ipynb) | Introduction to MLOps concepts: why ML projects fail in production, the executor-to-engineer mindset shift, and the role of operationalization in the ML lifecycle. |
+| 2 | [Aula 02 — House Price Data Pipeline + EDA](operacionalizacao_modelos_mlops/aula02/) | Production-grade data ingestion pipeline + comprehensive EDA for the California Housing dataset (Kaggle). Implements download → CSV-to-Parquet ingestion with PyArrow streaming, YAML-driven configuration, and a full 7-module EDA pipeline: descriptive stats, visualizations, pivot tables, statistical tests, interaction effects, feature engineering, and clustering. |
+
+**Libraries (Pipeline):** kaggle, pyarrow, PyYAML
+**Libraries (EDA):** pandas, numpy, scipy, statsmodels, scikit-learn, matplotlib, seaborn
+**Datasets:** California Housing (Kaggle — shibumohapatra/house-price, 20,640 rows, 10 features)
+
+**Aula 02 Architecture:**
+```
+Kaggle API → data/raw/*.csv → [PyArrow streaming] → data/processed/house_price.parquet
+                                                              │
+                                              ┌───────────────┴───────────────┐
+                                              │   EDA Pipeline (7 modules)    │
+                                              │   descriptive → viz → pivots  │
+                                              │   → stats → interactions      │
+                                              │   → features → clustering     │
+                                              └───────────────────────────────┘
+                                                              │
+                                               outputs/ (33 figs · 10 tables · 29 stats)
+                                               docs/eda_report.md
+```
+
+**Key EDA Findings:**
+- `median_income` is the strongest predictor (Pearson r=0.688)
+- `ocean_proximity` explains 23.8% of variance (η²=0.238); INLAND ~$115k cheaper
+- Engineered features (`bedrooms_per_room`, `rooms_per_household`) outperform raw counts
+- Geographic distance from major cities: r=-0.384 with house value
+- 3 geographic housing market clusters: LA Basin · Bay Area · Affluent Coastal
+- **Recommendation:** log-transform target; use income + location + ratio features
+
+---
+
 ## Technologies Used
 
 - **Python 3**
