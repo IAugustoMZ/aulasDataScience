@@ -1,0 +1,135 @@
+# quality.yaml — Configuração de Qualidade de Dados via Great Expectations
+#
+# Este arquivo define TODAS as regras de qualidade. O código (src/quality.py)
+# é genérico: ele lê este YAML e executa as verificações dinamicamente.
+#
+# Princípio MLOps: separar política (YAML) de mecanismo (código).
+# Para alterar um critério basta editar este arquivo — sem tocar no código.
+#
+# Tipos de expectation usam snake_case (padrão GE).
+# kwargs seguem a assinatura exata de cada classe GE.
+quality:
+  suite_name: "house_price_quality_suite"
+  # fail_pipeline_on_error: true → lança RuntimeError se qualquer check falhar
+  # Use true em produção, false durante exploração / desenvolvimento
+  fail_pipeline_on_error: false
+  output_dir: "outputs/quality"        # relatório JSON salvo aqui
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Expectations de TABELA (sem coluna específica)
+# Validam propriedades globais do dataset
+# ─────────────────────────────────────────────────────────────────────────────
+table_expectations:
+
+  # O dataset California Housing deve ter entre 5.000 e 25.000 linhas
+  - type: expect_table_row_count_to_be_between
+    kwargs:
+      min_value: 5000
+      max_value: 25000
+
+  # Garante que o schema não mudou — nenhuma coluna foi adicionada ou removida
+  - type: expect_table_columns_to_match_set
+    kwargs:
+      column_set:
+        - median_house_value
+        - median_income
+        - housing_median_age
+        - total_rooms
+        - total_bedrooms
+        - population
+        - households
+        - latitude
+        - longitude
+        - ocean_proximity
+      exact_match: true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Expectations de COLUNA
+# Cada chave é o nome de uma coluna; o valor é uma lista de checks.
+# Ordem importa: checks mais baratos (null) devem vir antes de range checks.
+# ─────────────────────────────────────────────────────────────────────────────
+column_expectations:
+
+  # ── Variável alvo ──────────────────────────────────────────────────────────
+  median_house_value:
+    - type: expect_column_values_to_not_be_null
+    - type: expect_column_values_to_be_between
+      kwargs:
+        min_value: 0
+        max_value: 600000      # cap histórico do dataset (500001 + margem)
+    - type: expect_column_mean_to_be_between
+      kwargs:
+        min_value: 150000      # média empírica ~206k
+        max_value: 280000
+
+  # ── Features numéricas contínuas ───────────────────────────────────────────
+  median_income:
+    - type: expect_column_values_to_not_be_null
+    - type: expect_column_values_to_be_between
+      kwargs:
+        min_value: 0.0
+        max_value: 20.0        # renda em unidades de $10k; valores acima de 15 são raros
+
+  housing_median_age:
+    - type: expect_column_values_to_not_be_null
+    - type: expect_column_values_to_be_between
+      kwargs:
+        min_value: 1
+        max_value: 55          # máximo histórico = 52 anos + margem
+
+  total_rooms:
+    - type: expect_column_values_to_not_be_null
+    - type: expect_column_values_to_be_between
+      kwargs:
+        min_value: 1
+        max_value: null        # sem teto definido — outliers serão sinalizados via mean
+
+  # ── Coluna com nulos conhecidos ────────────────────────────────────────────
+  total_bedrooms:
+    # ~1% dos registros têm bedrooms ausentes — isso é esperado no dataset original
+    # mostly: 0.98 → toleramos até 2% de nulos (margem sobre o ~1% histórico)
+    - type: expect_column_values_to_not_be_null
+      kwargs:
+        mostly: 0.98
+
+  population:
+    - type: expect_column_values_to_not_be_null
+    - type: expect_column_values_to_be_between
+      kwargs:
+        min_value: 1
+        max_value: null
+
+  households:
+    - type: expect_column_values_to_not_be_null
+    - type: expect_column_values_to_be_between
+      kwargs:
+        min_value: 1
+        max_value: null
+
+  # ── Coordenadas geográficas (bounding box da Califórnia) ───────────────────
+  latitude:
+    - type: expect_column_values_to_not_be_null
+    - type: expect_column_values_to_be_between
+      kwargs:
+        min_value: 32.0        # fronteira sul da Califórnia
+        max_value: 42.5        # fronteira norte
+
+  longitude:
+    - type: expect_column_values_to_not_be_null
+    - type: expect_column_values_to_be_between
+      kwargs:
+        min_value: -125.0      # costa pacífica
+        max_value: -113.0      # fronteira leste da Califórnia
+
+  # ── Variável categórica ────────────────────────────────────────────────────
+  ocean_proximity:
+    - type: expect_column_values_to_not_be_null
+    # Conjunto fechado: qualquer valor fora desta lista é uma anomalia
+    - type: expect_column_values_to_be_in_set
+      kwargs:
+        value_set:
+          - "NEAR BAY"
+          - "<1H OCEAN"
+          - "INLAND"
+          - "NEAR OCEAN"
+          - "ISLAND"
