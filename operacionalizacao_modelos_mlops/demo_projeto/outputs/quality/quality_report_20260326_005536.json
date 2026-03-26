@@ -1,0 +1,470 @@
+{
+  "success": true,
+  "total": 22,
+  "passed": 22,
+  "failed": 0,
+  "details": [
+    {
+      "type": "expect_table_row_count_to_be_between",
+      "column": null,
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "min_value": 5000,
+        "max_value": 25000
+      },
+      "result": {
+        "observed_value": 20640
+      }
+    },
+    {
+      "type": "expect_table_columns_to_match_set",
+      "column": null,
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "column_set": [
+          "median_house_value",
+          "median_income",
+          "housing_median_age",
+          "total_rooms",
+          "total_bedrooms",
+          "population",
+          "households",
+          "latitude",
+          "longitude",
+          "ocean_proximity"
+        ]
+      },
+      "result": {
+        "observed_value": [
+          "households",
+          "housing_median_age",
+          "latitude",
+          "longitude",
+          "median_house_value",
+          "median_income",
+          "ocean_proximity",
+          "population",
+          "total_bedrooms",
+          "total_rooms"
+        ]
+      }
+    },
+    {
+      "type": "expect_column_values_to_not_be_null",
+      "column": "median_house_value",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data"
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_be_between",
+      "column": "median_house_value",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "min_value": 0.0,
+        "max_value": 600000.0
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "missing_count": 0,
+        "missing_percent": 0.0,
+        "unexpected_percent_total": 0.0,
+        "unexpected_percent_nonmissing": 0.0,
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_mean_to_be_between",
+      "column": "median_house_value",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "min_value": 150000.0,
+        "max_value": 280000.0
+      },
+      "result": {
+        "observed_value": 206855.81690891474
+      }
+    },
+    {
+      "type": "expect_column_values_to_not_be_null",
+      "column": "median_income",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data"
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_be_between",
+      "column": "median_income",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "min_value": 0.0,
+        "max_value": 20.0
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "missing_count": 0,
+        "missing_percent": 0.0,
+        "unexpected_percent_total": 0.0,
+        "unexpected_percent_nonmissing": 0.0,
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_not_be_null",
+      "column": "housing_median_age",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data"
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_be_between",
+      "column": "housing_median_age",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "min_value": 1.0,
+        "max_value": 55.0
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "missing_count": 0,
+        "missing_percent": 0.0,
+        "unexpected_percent_total": 0.0,
+        "unexpected_percent_nonmissing": 0.0,
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_not_be_null",
+      "column": "total_rooms",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data"
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_be_between",
+      "column": "total_rooms",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "min_value": 1.0
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "missing_count": 0,
+        "missing_percent": 0.0,
+        "unexpected_percent_total": 0.0,
+        "unexpected_percent_nonmissing": 0.0,
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_not_be_null",
+      "column": "total_bedrooms",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "mostly": 0.98
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 207,
+        "unexpected_percent": 1.002906976744186,
+        "partial_unexpected_list": [
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN,
+          NaN
+        ],
+        "partial_unexpected_index_list": [
+          290,
+          341,
+          538,
+          563,
+          696,
+          738,
+          1097,
+          1350,
+          1456,
+          1493,
+          1606,
+          2028,
+          2115,
+          2301,
+          2323,
+          2334,
+          2351,
+          2412,
+          2420,
+          2578
+        ]
+      }
+    },
+    {
+      "type": "expect_column_values_to_not_be_null",
+      "column": "population",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data"
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_be_between",
+      "column": "population",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "min_value": 1.0
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "missing_count": 0,
+        "missing_percent": 0.0,
+        "unexpected_percent_total": 0.0,
+        "unexpected_percent_nonmissing": 0.0,
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_not_be_null",
+      "column": "households",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data"
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_be_between",
+      "column": "households",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "min_value": 1.0
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "missing_count": 0,
+        "missing_percent": 0.0,
+        "unexpected_percent_total": 0.0,
+        "unexpected_percent_nonmissing": 0.0,
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_not_be_null",
+      "column": "latitude",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data"
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_be_between",
+      "column": "latitude",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "min_value": 32.0,
+        "max_value": 42.5
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "missing_count": 0,
+        "missing_percent": 0.0,
+        "unexpected_percent_total": 0.0,
+        "unexpected_percent_nonmissing": 0.0,
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_not_be_null",
+      "column": "longitude",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data"
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_be_between",
+      "column": "longitude",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "min_value": -125.0,
+        "max_value": -113.0
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "missing_count": 0,
+        "missing_percent": 0.0,
+        "unexpected_percent_total": 0.0,
+        "unexpected_percent_nonmissing": 0.0,
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_not_be_null",
+      "column": "ocean_proximity",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data"
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    },
+    {
+      "type": "expect_column_values_to_be_in_set",
+      "column": "ocean_proximity",
+      "success": true,
+      "kwargs": {
+        "batch_id": "pipeline_source-input_data",
+        "value_set": [
+          "NEAR BAY",
+          "<1H OCEAN",
+          "INLAND",
+          "NEAR OCEAN",
+          "ISLAND"
+        ]
+      },
+      "result": {
+        "element_count": 20640,
+        "unexpected_count": 0,
+        "unexpected_percent": 0.0,
+        "partial_unexpected_list": [],
+        "missing_count": 0,
+        "missing_percent": 0.0,
+        "unexpected_percent_total": 0.0,
+        "unexpected_percent_nonmissing": 0.0,
+        "partial_unexpected_counts": [],
+        "partial_unexpected_index_list": []
+      }
+    }
+  ]
+}

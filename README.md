@@ -1,20 +1,26 @@
 # Data Science and Machine Learning Lessons
 
-Welcome to this repository! It contains Data Science and Machine Learning notebooks developed for classroom lessons. The goal is to share practical, accessible learning material, covering fundamentals of Machine Learning up to advanced Deep Learning techniques.
+Welcome to this comprehensive repository! It contains Data Science, Machine Learning, and MLOps materials developed for classroom lessons and professional practice. The goal is to provide practical, accessible learning material covering fundamentals of Machine Learning, advanced Deep Learning techniques, and production-grade MLOps pipelines.
 
 ## Repository Structure
 
-The repository is organized into **5 thematic modules**, arranged for a logical learning progression:
+The repository is organized into **6 thematic modules**, arranged for a logical learning progression:
 
-| Module | Topic | Notebooks |
-|--------|-------|-----------|
-| [ML Fundamentals](#1-machine-learning-fundamentals) | Introduction to scikit-learn and ML workflow | 1 |
-| [Classification](#2-classification-techniques) | Logistic Regression, Decision Trees, SVM | 8 |
-| [Clustering](#3-clustering-techniques) | KMeans, Hierarchical Clustering, DBSCAN | 6 |
-| [Neural Networks](#4-neural-networks-with-tensorflow) | ANN for classification, regression, and time series | 4 |
-| [Deep Learning](#5-deep-learning-with-tensorflow) | CNN, Transfer Learning, LSTM, Autoencoders, SOM | 5 |
+| Module | Topic | Content |
+|--------|-------|---------|
+| [ML Fundamentals](#1-machine-learning-fundamentals) | Introduction to scikit-learn and ML workflow | 6 notebooks |
+| [Classification](#2-classification-techniques) | Logistic Regression, Decision Trees, SVM | 13 notebooks |
+| [Clustering](#3-clustering-techniques) | KMeans, Hierarchical Clustering, DBSCAN | 6 notebooks |
+| [Neural Networks](#4-neural-networks-with-tensorflow) | ANN for classification, regression, and time series | 4 notebooks |
+| [Deep Learning](#5-deep-learning-with-tensorflow) | CNN, Transfer Learning, LSTM, Autoencoders, SOM | 5 notebooks |
+| [MLOps & Model Operationalization](#6-mlops--model-operationalization) | Production pipelines, pipelines, data validation, and model deployment | 2 aulas + 2 reference implementations |
 
-**Total: 24 notebooks** covering theory, practical implementation, and applied projects.
+**Total: 35 Jupyter notebooks + 4 production Python scripts** covering theory, practical implementation, applied projects, and MLOps best practices.
+
+### Note on Student Exercise Files (_alunos versions)
+This repository includes paired notebook versions:
+- **Regular notebooks** (e.g., `1_introducao_classificacao.ipynb`): Complete solutions and guides
+- **_alunos versions** (e.g., `1_introducao_classificacao_alunos.ipynb`): Student exercise templates for classroom use
 
 ---
 
@@ -24,7 +30,12 @@ An introductory module that establishes the core concepts of supervised machine 
 
 | # | Notebook | Description |
 |---|----------|-------------|
-| 1 | [ML Fundamentals with Scikit-Learn](fundamentos_machine_learn/fundamentos_machine_learning_scikitlearn01_alunos.ipynb) | Practical introduction to Logistic Regression and K-Nearest Neighbors (KNN) using the Iris and Credit Scoring datasets. Covers train-test split, accuracy score, and algorithm comparison. |
+| 1 | [ML Fundamentals with Scikit-Learn 01](fundamentos_machine_learn/fundamentos_machine_learning_scikitlearn01_alunos.ipynb) | Practical introduction to Logistic Regression and K-Nearest Neighbors (KNN) using the Iris and Credit Scoring datasets. Covers train-test split, accuracy score, and algorithm comparison. |
+| 2 | [ML Fundamentals with Scikit-Learn 02](fundamentos_machine_learn/fundamentos_machine_learning_scikitlearn02_alunos.ipynb) | Classification model selection and evaluation techniques. |
+| 3 | [ML Fundamentals with Scikit-Learn 03](fundamentos_machine_learn/fundamentos_machine_learning_scikitlearn03_alunos.ipynb) | Feature scaling and preprocessing strategies. |
+| 4 | [ML Fundamentals with Scikit-Learn 04](fundamentos_machine_learn/fundamentos_machine_learning_scikitlearn04_alunos.ipynb) | Model validation and performance metrics. |
+| 6 | [ML Fundamentals with Scikit-Learn 06](fundamentos_machine_learn/fundamentos_machine_learning_scikitlearn06.ipynb) | Advanced preprocessing and pipeline construction. |
+| 7 | [ML Fundamentals with Scikit-Learn 07](fundamentos_machine_learn/fundamentos_machine_learning_scikitlearn07_alunos.ipynb) | Practical applications and capstone exercises. |
 
 **Libraries:** scikit-learn, pandas, seaborn, matplotlib
 
@@ -34,7 +45,7 @@ An introductory module that establishes the core concepts of supervised machine 
 
 A comprehensive module on supervised classification that progresses from simple, interpretable models to advanced techniques like SVM. Emphasizes that model complexity does not guarantee better results—proper evaluation and validation are essential.
 
-### Theory and Practical Lessons
+### Lesson Notebooks (with Student Versions Available)
 
 | # | Notebook | Description |
 |---|----------|-------------|
@@ -44,7 +55,7 @@ A comprehensive module on supervised classification that progresses from simple,
 | 4 | [Decision Trees & Cross-Validation](classificacao/4_arvores_de_decisao_validacao_cruzada.ipynb) | Decision Trees with Gini and Entropy criteria, demonstration of overfitting, hyperparameter tuning (max_depth), Stratified K-Fold Cross-Validation (k=10), GridSearchCV, custom metrics, and handling class imbalance with class_weight. Dataset: Drug200. |
 | 5 | [Support Vector Machines (SVM)](classificacao/5_maquinas_suportadas_vetor.ipynb) | Maximum-margin classifiers with kernels (Linear, RBF, Sigmoid, Cosine). Covers regularization parameter C, gamma, RandomizedSearchCV for efficient tuning, and SVM advantages in high-dimensional spaces. Dataset: German Credit. |
 
-### Projects and Exercises
+### Projects & Solutions
 
 | # | Notebook | Description |
 |---|----------|-------------|
@@ -112,66 +123,312 @@ Advanced module covering specialized Deep Learning architectures: convolutional 
 
 ## 6. MLOps — Model Operationalization
 
-Practical module on MLOps engineering, covering the full lifecycle from data ingestion to model deployment. Focuses on production-grade pipelines, reproducibility, and engineering best practices.
+Comprehensive module on MLOps engineering, covering the full lifecycle from problem definition to production deployment. Progresses from foundational concepts through a complete, reference-grade production pipeline.
+
+### Educational Content
 
 | # | Content | Description |
 |---|---------|-------------|
-| 1 | [Aula 01 — Intro to MLOps](operacionalizacao_modelos_mlops/aula01/operacionalizacao_modelos_mlops_aula01.ipynb) | Introduction to MLOps concepts: why ML projects fail in production, the executor-to-engineer mindset shift, and the role of operationalization in the ML lifecycle. |
-| 2 | [Aula 02 — House Price Data Pipeline + EDA](operacionalizacao_modelos_mlops/aula02/) | Production-grade data ingestion pipeline + comprehensive EDA for the California Housing dataset (Kaggle). Implements download → CSV-to-Parquet ingestion with PyArrow streaming, YAML-driven configuration, and a full 7-module EDA pipeline: descriptive stats, visualizations, pivot tables, statistical tests, interaction effects, feature engineering, and clustering. |
+| 1 | [Aula 01 — Intro to MLOps](operacionalizacao_modelos_mlops/aula01/operacionalizacao_modelos_mlops_aula01.ipynb) | **Conceptual foundation** — Why ML projects fail in production, the executor-to-engineer mindset shift, and the role of operationalization in the ML lifecycle. Sets context for production-grade practices. |
 
-**Libraries (Pipeline):** kaggle, pyarrow, PyYAML
-**Libraries (EDA):** pandas, numpy, scipy, statsmodels, scikit-learn, matplotlib, seaborn
-**Datasets:** California Housing (Kaggle — shibumohapatra/house-price, 20,640 rows, 10 features)
+### Production-Grade Pipeline Implementation
 
-**Aula 02 Architecture:**
+| # | Name | Type | Description |
+|---|------|------|-------------|
+| 2 | [Aula 02 — Full MLOps Pipeline with EDA & Modeling](operacionalizacao_modelos_mlops/aula02/) | **Complete Pipeline** | **Production-ready implementation** with 5-stage architecture: (1) Data Ingestion (CSV → Parquet via Kaggle API), (2) EDA (7-module analysis), (3) Data Quality (Great Expectations validation), (4) Preprocessing (9 sklearn transformers), (5) Modeling (10 base models + 2 ensembles with Optuna + MLFlow). **Dataset:** California Housing (Kaggle, 20,640 rows). |
+
+**Aula02 Architecture:**
 ```
-Kaggle API → data/raw/*.csv → [PyArrow streaming] → data/processed/house_price.parquet
-                                                              │
-                                              ┌───────────────┴───────────────┐
-                                              │   EDA Pipeline (7 modules)    │
-                                              │   descriptive → viz → pivots  │
-                                              │   → stats → interactions      │
-                                              │   → features → clustering     │
-                                              └───────────────────────────────┘
-                                                              │
-                                               outputs/ (33 figs · 10 tables · 29 stats)
-                                               docs/eda_report.md
+Step 1: INGESTION
+├─ Kaggle API → Download CSV
+├─ PyArrow Streaming → Parquet conversion
+└─ Lazy loading for large datasets
+
+Step 2: EDA (7 modules)
+├─ Descriptive Statistics
+├─ Visualizations & Distributions
+├─ Pivot Tables & Aggregations
+├─ Statistical Tests & Correlations
+├─ Interaction Effects & Feature Engineering
+├─ Clustering Analysis
+└─ Comprehensive report → outputs/
+
+Step 3: DATA QUALITY
+├─ Great Expectations suite with custom rules
+├─ YAML-driven validation profiles
+└─ Error tracking & reporting
+
+Step 4: PREPROCESSING
+├─ 9 sklearn Transformers (StandardScaler, OneHotEncoder, etc.)
+├─ YAML configuration for reproducibility
+└─ Fitted transformer serialization
+
+Step 5: MODELING
+├─ 10 base models (Linear, Ridge, Lasso, RF, GB, SVR, KNN, ElasticNet, AdaBoost, Extra Trees)
+├─ 2 ensemble models (Voting, Stacking)
+├─ Hyperparameter tuning (Optuna)
+├─ MLFlow experiment tracking
+└─ Model selection & comparison
 ```
 
-**Key EDA Findings:**
-- `median_income` is the strongest predictor (Pearson r=0.688)
-- `ocean_proximity` explains 23.8% of variance (η²=0.238); INLAND ~$115k cheaper
+**Aula02 File Structure:**
+```
+aula02/
+├── config/              (5 YAML files controlling all behavior)
+├── eda/                 (7 Python modules for analysis)
+├── notebooks/           (4 walkthrough Jupyter scripts)
+│   ├── 1_ingestao.ipynb
+│   ├── 2_eda.ipynb
+│   ├── 3_qualidade.ipynb
+│   └── 4_preprocessing.ipynb
+├── src/                 (Production utilities)
+│   ├── downloader.py
+│   ├── ingestion.py
+│   ├── quality.py
+│   └── preprocessing.py
+├── main.py              (CLI orchestrator)
+├── outputs/             (Results: 33 figs, 10 tables, quality reports)
+└── README.md            (Full documentation)
+```
+
+**Key Aula02 Findings:**
+- `median_income` strongest predictor (Pearson r=0.688)
+- `ocean_proximity` explains 23.8% of variance; INLAND ~$115k cheaper
 - Engineered features (`bedrooms_per_room`, `rooms_per_household`) outperform raw counts
 - Geographic distance from major cities: r=-0.384 with house value
 - 3 geographic housing market clusters: LA Basin · Bay Area · Affluent Coastal
 - **Recommendation:** log-transform target; use income + location + ratio features
 
+**Libraries:** PyArrow, Great Expectations, Optuna, MLFlow, scikit-learn, pandas, numpy, scipy, matplotlib, seaborn
+
 ---
 
-## Technologies Used
+### Reference Implementations
 
-- **Python 3**
-- **scikit-learn** — classical ML algorithms, preprocessing, and metrics
-- **TensorFlow / Keras** — neural networks and Deep Learning
-- **pandas / numpy** — data manipulation and processing
-- **matplotlib / seaborn** — data visualization
-- **scipy** — scientific computing and dendrograms
+| # | Name | Type | Purpose |
+|---|------|------|---------|
+| 3 | [Demo Project](operacionalizacao_modelos_mlops/demo_projeto/) | **Scaffold** | Simplified MLOps project template for quick prototyping. Clean folder structure (`config/`, `data/`, `notebooks/`, `outputs/`, `src/`) ready for customization. |
+| 4 | [Reference Project](operacionalizacao_modelos_mlops/ref_projeto/) | **Production Reference** | Full-featured MLOps implementation with production patterns. Includes multi-domain `config/`, complete pipeline from ingestion → modeling, walkthrough scripts for each stage with `# %%` cells for interactive execution, and MLFlow tracking (`mlruns/`). |
+
+**Reference Project Walkthroughs:**
+```
+ref_projeto/
+├── ingestao_walkthrough.py       (Data loading & preparation)
+├── qualidade_walkthrough.py      (Data validation & profiling)
+├── preprocessamento_walkthrough.py (Transformation pipeline)
+├── modelagem_walkthrough.py      (Model training & evaluation)
+└── mlruns/                       (MLFlow experiment history)
+```
+
+**Libraries (MLOps Core):** PyArrow, PyYAML, Great Expectations, Optuna, MLFlow
+**Libraries (EDA/Preprocessing):** scikit-learn, pandas, numpy, scipy, statsmodels, matplotlib, seaborn
+**Datasets:** California Housing (Kaggle — 20,640 rows, 10 features)
+
+---
+
+## Technologies & Dependencies
+
+### Core Stack
+- **Python 3.11** — Programming language
+- **scikit-learn** — Classical ML algorithms, preprocessing, metrics
+- **TensorFlow / Keras** — Neural networks and Deep Learning
+- **pandas / numpy** — Data manipulation and processing
+- **matplotlib / seaborn** — Data visualization
+- **scipy** — Scientific computing and advanced statistics
 - **MiniSom** — Self-Organizing Maps
 
-## How to Use
+### MLOps & Production
+- **PyArrow** — Efficient data serialization (CSV ↔ Parquet)
+- **PyYAML** — Configuration management
+- **Great Expectations** — Data validation and profiling
+- **Optuna** — Hyperparameter optimization
+- **MLFlow** — Experiment tracking and model registry
+- **Kaggle API** — Dataset downloads
+- **FastAPI / Flask** — Model serving (in reference implementations)
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/IAugustoMZ/aulasDataScience.git
-   ```
+### Environment
+- **Virtual Environment:** `ds_env/` (Python 3.11 venv)
+- **Jupyter Ecosystem:** For interactive development and education
 
-2. Install dependencies:
-   ```bash
-   pip install numpy pandas scikit-learn tensorflow matplotlib seaborn scipy minisom
-   ```
+---
 
-3. Open the notebooks with Jupyter Notebook or Google Colab.
+## Quick Start Guide
+
+### 1. Clone & Activate Environment
+
+```bash
+git clone https://github.com/[your-username]/aulasDataScience.git
+cd aulasDataScience
+
+# Activate virtual environment (Windows)
+ds_env\Scripts\activate
+
+# Activate virtual environment (macOS/Linux)
+source ds_env/bin/activate
+```
+
+### 2. Install Dependencies (if needed)
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Run Jupyter Notebooks
+
+**For individual lessons:**
+```bash
+jupyter notebook classificacao/1_introducao_classificacao.ipynb
+```
+
+**To browse all notebooks:**
+```bash
+jupyter notebook
+```
+
+### 4. Run MLOps Pipeline (Aula02)
+
+```bash
+cd operacionalizacao_modelos_mlops/aula02
+
+# Run full pipeline
+python main.py --all
+
+# Or run individual stages
+python main.py --ingestion
+python main.py --eda
+python main.py --quality
+python main.py --preprocessing
+python main.py --modeling
+```
+
+### 5. Run Reference Implementation Walkthroughs
+
+```bash
+cd operacionalizacao_modelos_mlops/ref_projeto
+
+# Each walkthrough uses # %% cells for interactive execution in VS Code / Jupyter:
+python ingestao_walkthrough.py
+python qualidade_walkthrough.py
+python preprocessamento_walkthrough.py
+python modelagem_walkthrough.py
+```
+
+---
+
+## Project Organization & Learner Path
+
+### For Beginners
+**Start Here:** `fundamentos_machine_learn/` → `classificacao/1_introducao_classificacao.ipynb`
+
+- Learn ML fundamentals, train-test splits, and basic algorithms
+- Understand evaluation metrics before diving into complex models
+- Use the paired `_alunos` versions for exercises
+
+### For Intermediate Learners
+**Progress To:** `classificacao/` and `clusterizacao/`
+
+- Explore multiple algorithm families (Logistic Regression, Decision Trees, SVM, Clustering)
+- Practice hyperparameter tuning and cross-validation
+- Work through projects with real datasets
+
+### For Advanced Learners
+**Move To:** `redes_neurais/` and `deep_learning/`
+
+- Build neural networks from scratch
+- Understand backpropagation and modern architectures (CNN, LSTM, VAE)
+- Apply transfer learning to image classification
+
+### For MLOps & Production
+**Explore:** `operacionalizacao_modelos_mlops/`
+
+- **Aula01:** Conceptual grounding in MLOps principles
+- **Aula02:** Hands-on production pipeline with all 5 stages
+- **Reference Projects:** Production-ready templates and best practices
+
+---
+
+## Datasets & Data Files
+
+This repository uses publicly available datasets for educational purposes:
+
+| Dataset | Location | Size | Notebooks Using It |
+|---------|----------|------|-------------------|
+| **Iris** | Built-in (seaborn/sklearn) | 150 samples | Fundamentals, Classification, Clustering, Neural Networks |
+| **German Credit** | `classificacao/`, `data/` | 1,000 samples | Classification, Clustering |
+| **Drug200** | `classificacao/drug200.csv` | 200 samples | Classification (with multiclass) |
+| **Credit Scoring** | `data/cs-training (1).csv` | ~5,000 samples | Advanced preprocessing |
+| **E-commerce** | Generated in notebooks | 541,909 transactions | Clustering (mini-project) |
+| **California Housing** | Kaggle (auto-download in Aula02) | 20,640 samples | MLOps pipeline |
+| **Garment Worker Productivity** | Generated in notebooks | 1,197 records | Clustering comparison |
+| **CO2 Emissions** | `data/co2.csv` | Various | Time series / auxiliary |
+
+**Note:** Datasets are either built-in (Iris), small CSV files included, or downloaded automatically during pipeline execution. No API keys required except for Kaggle (optional for Aula02).
+
+---
+
+## Repository Status & Content Summary
+
+```
+Total Content Inventory:
+├── Jupyter Notebooks:           35 (lesson content + student exercises)
+├── Python Scripts:              4 (MLOps walkthroughs in ref_projeto/)
+├── Data Files (CSV):            6
+├── Configuration Files (YAML):  5 (Aula02 MLOps config)
+├── Documentation Files:         4 (README, CLAUDE.md, Aula02/README, outputs/)
+└── Python Virtual Environment:  Complete (150+ packages)
+
+Learning Modules:               6 (Fundamentals → MLOps)
+Total Estimated Content Hours:  40-50 (including deep dives)
+Student Exercise Templates:     8 (_alunos versions in Fundamentals & Classification)
+Production Implementations:     2 (demo_projeto, ref_projeto)
+```
+
+---
+
+## Tips for Using This Repository
+
+### As an Instructor
+- **For Lectures:** Use the regular notebooks (`1_introducao.ipynb`, etc.)
+- **For Assignments:** Direct students to the `_alunos` versions for hands-on practice
+- **For Projects:** Assign one from the Projects & Exercises sections in each module
+- **For Demonstrations:** Use MLOps Aula02 to show real production workflows
+
+### As a Student
+- **Read First:** Start with the theory sections (Aula01 for conceptual grounding)
+- **Code Along:** Open both regular and `_alunos` notebooks side-by-side; try exercises independently first
+- **Projects:** Build one project per module to solidify understanding
+- **Production Ready:** Explore Aula02 and reference implementations to understand industry practices
+
+### For Using Your Own Data
+1. Place datasets in the `data/` folder
+2. Update notebook paths or configuration files (YAML in MLOps pipeline)
+3. Adapt preprocessing and EDA modules to your domain
+4. Reuse the model comparison framework from projects
+
+---
 
 ## License
 
-This repository is provided for educational purposes.
+This repository is provided for **educational purposes**. Feel free to use, modify, and adapt the notebooks for learning and teaching.
+
+### Datasets
+Some datasets are publicly available (Iris, Housing); others are from Kaggle or open sources. Respect the licensing terms of individual datasets when used.
+
+---
+
+## Contributing & Feedback
+
+Have suggestions for improvements, found an error, or want to add content?
+- Open an issue or pull request
+- This repository is a living educational resource and improvements are always welcome
+
+---
+
+## Project Philosophy
+
+This repository embodies three core principles:
+
+1. **Learning-Focused:** Every notebook prioritizes clarity and understanding over production optimization
+2. **Practical:** Theory is always paired with real code and datasets; no "toy examples" in isolation
+3. **Progressive:** Content builds from fundamentals through advanced techniques to professional MLOps practices
+
+Our goal: Transform from "executor" (running code provided by others) to "engineer" (understanding, designing, and deploying ML systems).

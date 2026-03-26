@@ -30,3 +30,7 @@ matplotlib>=3.7.0
 
 # Statistical visualization (violin plots, KDE, pairplots, heatmaps)
 seaborn>=0.12.0
+
+# ── Data Quality ──────────────────────────────────────────────────────────────
+# Framework de validação de dados com expectations declarativas (via YAML)
+great-expectations>=1.0.0
