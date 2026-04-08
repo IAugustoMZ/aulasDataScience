@@ -1,0 +1,166 @@
+# preprocessing.yaml — Configuração de Pré-processamento e Feature Engineering
+#
+# Princípio MLOps: separação entre política (YAML) e mecanismo (código).
+# Para ajustar qualquer transformação, edite apenas este arquivo.
+# O código em src/preprocessing.py não precisa mudar.
+#
+# Pipeline: data/processed/house_price.parquet
+#        → data/features/house_price_features.parquet
+
+# ── Saída ──────────────────────────────────────────────────────────────────────
+preprocessing:
+  output_dir: "data/features"
+  output_filename: "house_price_features.parquet"
+  compression: "snappy"
+
+# ── 1. Imputação de Valores Ausentes ──────────────────────────────────────────
+# total_bedrooms tem ~1% de NaN. Imputamos com a mediana por ocean_proximity
+# porque a distribuição é assimétrica (nunca usar média em features skewed)
+# e porque o preço dos imóveis varia muito por localização.
+imputation:
+  - column: "total_bedrooms"
+    strategy: "median"       # median | mean | constant
+    group_by: "ocean_proximity"
+
+# ── 2. Flags Binárias ─────────────────────────────────────────────────────────
+# Identificam valores censurados ou capados no dataset.
+# Esses pontos têm comportamento especial que modelos precisam aprender.
+binary_flags:
+  - column: "housing_median_age"
+    value: 52
+    new_column: "age_at_cap"          # 1 = bloco com idade máxima reportada
+  - column: "median_house_value"
+    value: 500001
+    new_column: "is_capped_target"    # 1 = valor censurado (verdadeiro ≥ $500,001)
+
+# ── 3. Features de Razão ──────────────────────────────────────────────────────
+# Razões são mais informativas que totais absolutos porque normalizam pelo
+# tamanho do bloco (nº de domicílios). EDA mostrou r=-0.256 para bedrooms_per_room.
+ratio_features:
+  - name: "rooms_per_household"
+    numerator: "total_rooms"
+    denominator: "households"
+  - name: "bedrooms_per_room"
+    numerator: "total_bedrooms"
+    denominator: "total_rooms"
+  - name: "population_per_household"
+    numerator: "population"
+    denominator: "households"
+
+# ── 4. Transformação Logarítmica (log1p) ──────────────────────────────────────
+# Features com skewness > 1.5 se beneficiam de log1p:
+#   - normaliza a distribuição
+#   - reduz o impacto de outliers extremos
+#   - melhora a linearidade com o target
+# log1p(x) = log(1+x) — seguro para x=0
+# Colunas originais são mantidas; colunas log_ são adicionadas.
+log_transform:
+  columns:
+    - "total_rooms"             # skew=4.15
+    - "total_bedrooms"          # skew=3.46
+    - "population"              # skew=4.94
+    - "households"              # skew=3.41
+    - "median_income"           # skew=1.65
+    - "rooms_per_household"     # derivada de skewed features
+    - "population_per_household"
+
+# ── 5. Distâncias Geográficas (Euclidiana em graus) ───────────────────────────
+# Latitude e longitude brutas são difíceis para modelos lineares.
+# Distância ao centro de emprego mais próximo (r=-0.384 com target) é
+# muito mais informativa. Usamos distância euclidiana em graus (mesma
+# escala do dataset — ≈111 km/grau).
+# nearest_city_distance = min(todas as dist_* do bloco)
+geo_distances:
+  lat_col: "latitude"
+  lon_col: "longitude"
+  nearest_city_column: "nearest_city_distance"
+  cities:
+    - name: "san_francisco"
+      lat: 37.7749
+      lon: -122.4194
+    - name: "los_angeles"
+      lat: 34.0522
+      lon: -118.2437
+    - name: "san_jose"
+      lat: 37.3382
+      lon: -121.8863
+    - name: "san_diego"
+      lat: 32.7157
+      lon: -117.1611
+    - name: "sacramento"
+      lat: 38.5816
+      lon: -121.4944
+
+# ── 6. Features Polinomiais e Interações ─────────────────────────────────────
+# Captura não-linearidade e efeitos combinados detectados na EDA.
+# median_income_x_housing_median_age: r=0.589 com target (bairros ricos E antigos)
+# median_income_squared: captura retorno decrescente da renda em alta faixa
+polynomial_features:
+  - name: "median_income_squared"
+    columns: ["median_income"]       # x²  (degree=2, single feature)
+  - name: "housing_median_age_squared"
+    columns: ["housing_median_age"]  # x²
+  - name: "median_income_x_housing_median_age"
+    columns: ["median_income", "housing_median_age"]  # interação (produto)
+
+# ── 7. Encoding da Variável Categórica ───────────────────────────────────────
+# ocean_proximity tem 5 categorias com impacto grande (η²=0.238).
+# Duas representações:
+#   ordinal: distância crescente ao oceano (0=ISLAND, 4=INLAND)
+#   one-hot: dummies explícitas (sem drop_first — mantemos todas para interpretação)
+categorical_encoding:
+  column: "ocean_proximity"
+  ordinal_column: "ocean_proximity_encoded"
+  ordinal_map:                        # ordem: proximidade ao oceano
+    "ISLAND":     0
+    "NEAR BAY":   1
+    "NEAR OCEAN": 2
+    "<1H OCEAN":  3
+    "INLAND":     4
+  one_hot_prefix: "op"               # → op_INLAND, op_NEAR BAY, etc.
+  drop_first: false                  # mantém todas as categorias
+
+# ── 8. Seleção de Features ────────────────────────────────────────────────────
+# Baseado no ranking do EDA Report (Seção 13 — Priority Feature List).
+# Colunas brutas de contagem (total_rooms, total_bedrooms, population, households)
+# são EXCLUÍDAS — substituídas pelas razões e versões log.
+# O target (median_house_value) é mantido para facilitar o split treino/teste.
+feature_selection:
+  target: "median_house_value"
+  features_to_keep:
+    # ── Renda (preditor mais forte, r=0.688) ──
+    - "median_income"
+    - "log_median_income"
+    # ── Localização ──
+    - "latitude"
+    - "longitude"
+    - "ocean_proximity_encoded"
+    - "op_INLAND"
+    - "op_NEAR BAY"
+    - "op_NEAR OCEAN"
+    - "op_<1H OCEAN"
+    - "op_ISLAND"
+    # ── Distâncias geográficas ──
+    - "nearest_city_distance"
+    - "dist_san_francisco"
+    - "dist_los_angeles"
+    - "dist_san_jose"
+    - "dist_san_diego"
+    - "dist_sacramento"
+    # ── Razões de cômodos e ocupação ──
+    - "bedrooms_per_room"
+    - "rooms_per_household"
+    - "population_per_household"
+    - "log_rooms_per_household"
+    - "log_population_per_household"
+    # ── Idade ──
+    - "housing_median_age"
+    - "age_at_cap"
+    # ── Polinomiais e interações ──
+    - "median_income_squared"
+    - "housing_median_age_squared"
+    - "median_income_x_housing_median_age"
+    # ── Flags ──
+    - "is_capped_target"
+    # ── Target ──
+    - "median_house_value"

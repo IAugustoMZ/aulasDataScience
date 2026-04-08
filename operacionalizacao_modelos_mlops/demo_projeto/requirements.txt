@@ -34,3 +34,16 @@ seaborn>=0.12.0
 # ── Data Quality ──────────────────────────────────────────────────────────────
 # Framework de validação de dados com expectations declarativas (via YAML)
 great-expectations>=1.0.0
+
+# ── Modelagem e Experimentação ────────────────────────────────────────────────
+# Rastreamento de experimentos, métricas, artefatos e model registry
+mlflow>=2.10.0
+
+# Otimização de hiperparâmetros (Bayesian/TPE, pruning, visualizações)
+optuna>=3.5.0
+
+# Gradient boosting otimizado (histogramas, GPU-ready)
+xgboost>=2.0.0
+
+# Gradient boosting baseado em histogramas — mais rápido que XGBoost em datasets grandes
+lightgbm>=4.2.0

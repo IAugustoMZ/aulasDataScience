@@ -1,0 +1,475 @@
+# modeling.yaml — Configuração de Experimentação e Modelagem
+#
+# Princípio MLOps: separação entre política (YAML) e mecanismo (código).
+# Para adicionar um modelo, mudar o espaço de busca ou o número de trials,
+# edite apenas este arquivo. O código em modelagem.py não muda.
+#
+# Pipeline: data/features/house_price_features.parquet
+#        → mlruns/  (experimentos MLFlow)
+#        → outputs/modeling/ (artefatos: plots, métricas)
+
+# ── Pipeline de Pré-processamento (dentro do treino — leak-free) ──────────────
+#
+# GroupMedianImputer e StandardScalerTransformer foram removidos de
+# preprocessamento.py para evitar data leakage.
+# São aplicados AQUI, dentro do sklearn Pipeline, APÓS o split treino/holdout.
+#
+# imputation: lista de imputadores a encadear no Pipeline.
+#   column    : coluna a imputar (após feature_selection — coluna no X de entrada)
+#   strategy  : "group_median" → usa GroupMedianImputer de src/preprocessing.py
+#   group_by  : coluna de grupo para estratificação da mediana
+#
+# total_bedrooms é imputado ANTES de chegar aqui (ele é descartado pelo
+# FeatureSelector). bedrooms_per_room = total_bedrooms / total_rooms herda os
+# NaN e está em features_to_keep → precisa de imputação.
+# Usamos ocean_proximity_encoded (ordinal 0-4) como proxy do grupo original
+# (mesma semântica de ocean_proximity string, mas compatível com o parquet).
+#
+# scaling: lista de colunas a escalonar com StandardScalerTransformer.
+# Deve corresponder às features contínuas em features_to_keep (preprocessing.yaml).
+# Binárias (age_at_cap, is_capped_target, op_*) e ordinais não são escaladas.
+
+pipeline:
+  imputation:
+    - column: "bedrooms_per_room"
+      strategy: "group_median"
+      group_by: "ocean_proximity_encoded"
+
+  scaling:
+    columns:
+      - "median_income"
+      - "log_median_income"
+      - "housing_median_age"
+      - "latitude"
+      - "longitude"
+      - "nearest_city_distance"
+      - "dist_san_francisco"
+      - "dist_los_angeles"
+      - "dist_san_jose"
+      - "dist_san_diego"
+      - "dist_sacramento"
+      - "bedrooms_per_room"
+      - "rooms_per_household"
+      - "population_per_household"
+      - "log_rooms_per_household"
+      - "log_population_per_household"
+      - "median_income_squared"
+      - "housing_median_age_squared"
+      - "median_income_x_housing_median_age"
+
+# ── Redução de Features (via FeatureReducer — src/feature_reducer.py) ─────────
+#
+# Aplicada DEPOIS da imputação e escalonamento, ANTES do estimador final.
+# Configurada por método: none | rfe | pca | kpca
+#
+# method: método padrão usado no baseline (e em modelos sem Optuna).
+#
+# search_space.method: lista de métodos que o Optuna pode explorar por trial.
+#   Se omitido, o método é fixo (valor de method acima).
+#
+# Cada sub-chave (rfe, pca, kpca) contém:
+#   • parâmetros padrão (usados no baseline e como fallback do Optuna)
+#   • search_space: parâmetros específicos desse método que o Optuna tuneia
+#     quando escolhe esse método num trial.
+#
+# O Optuna co-otimiza: método de redução + parâmetros do método + estimador.
+feature_reduction:
+  method: "none"                # padrão para baseline; Optuna sobrescreve se search_space.method configurado
+
+  search_space:
+    method:
+      type: "categorical"
+      choices: ["none", "rfe", "pca", "kpca"]
+
+  rfe:
+    n_features_to_select: 15
+    rfe_estimator: "ridge"      # ridge | random_forest (ver src/feature_reducer.py)
+    search_space:
+      n_features_to_select:
+        type: "int"
+        low: 5
+        high: 25
+        
+  pca:
+    n_components: 15
+    search_space:
+      n_components:
+        type: "int"
+        low: 5
+        high: 25
+
+  kpca:
+    n_components: 15
+    kernel: "rbf"
+    gamma: null                 # null → 1/n_features (sklearn default)
+    degree: 3
+    coef0: 1.0
+    search_space:
+      n_components:
+        type: "int"
+        low: 5
+        high: 25
+      kernel:
+        type: "categorical"
+        choices: ["rbf", "poly", "cosine"]
+      gamma:
+        type: "log_float"
+        low: 1.0e-4
+        high: 10.0
+      degree:
+        type: "int"
+        low: 2
+        high: 5
+      coef0:
+        type: "float"
+        low: 0.0
+        high: 1.0
+
+# ── Configuração Geral do Experimento ─────────────────────────────────────────
+modeling:
+  experiment_name: "california-housing-experiments"
+  tracking_uri: "mlruns"            # caminho local (sqlite:///mlruns.db para produção)
+  random_seed: 13
+
+# ── Divisão Treino / Holdout ──────────────────────────────────────────────────
+# holdout é separado ANTES de qualquer treino e nunca é visto durante a busca.
+# Estratificação por quantis do target garante distribuição uniforme.
+holdout:
+  test_size: 0.2                    # 20% dos dados → holdout final
+  stratify_bins: 10                 # quantis para estratificação (bins do target)
+
+# ── Cross-Validation ──────────────────────────────────────────────────────────
+# KFold simples é suficiente para regressão com dados i.i.d.
+# n_splits=5 equilibra variância da estimativa e custo computacional.
+cv:
+  strategy: "kfold"                 # kfold | stratified_kfold
+  n_splits: 3
+  shuffle: true
+
+# ── Optuna ────────────────────────────────────────────────────────────────────
+# default_trials: nº de trials usado por TODOS os modelos e ensembles.
+# Para sobrescrever por modelo, adicione optuna_trials: N na entrada do modelo.
+optuna:
+  default_trials: 3
+
+# ── Métricas ──────────────────────────────────────────────────────────────────
+# primary: usada para selecionar o melhor modelo e direcionar o Optuna
+# additional: registradas no MLFlow mas não usadas para seleção
+metrics:
+  primary: "rmse"                   # rmse | mae | r2
+  additional:
+    - "mae"
+    - "r2"
+    - "mape"
+
+# ── Modelos ───────────────────────────────────────────────────────────────────
+# Cada entrada define:
+#   enabled        : ativa/desativa o modelo sem remover a configuração
+#   module/class   : importação dinâmica (importlib) — sem hardcode no código
+#   default_params : parâmetros usados no baseline e como base para o Optuna
+#   search_space   : espaço de busca do Optuna por parâmetro
+#
+# Tipos suportados em search_space:
+#   log_float  → suggest_float(low, high, log=True)   — alpha, C, learning_rate
+#   float      → suggest_float(low, high)              — subsample, frações
+#   int        → suggest_int(low, high)                — n_estimators, profundidade
+#   categorical→ suggest_categorical(choices)          — kernel, weights, etc.
+
+models:
+
+  # ── Lineares ────────────────────────────────────────────────────────────────
+  linear_regression:
+    enabled: true
+    module: "sklearn.linear_model"
+    class: "LinearRegression"
+    default_params: {}              # sem search_space → apenas baseline
+
+  ridge:
+    enabled: true
+    module: "sklearn.linear_model"
+    class: "Ridge"
+    default_params:
+      alpha: 1.0
+    search_space:
+      alpha:
+        type: "log_float"
+        low: 1.0e-4
+        high: 1.0e4
+
+  lasso:
+    enabled: false
+    module: "sklearn.linear_model"
+    class: "Lasso"
+    default_params:
+      alpha: 0.01
+      max_iter: 5000
+    search_space:
+      alpha:
+        type: "log_float"
+        low: 1.0e-5
+        high: 10.0
+
+  # ── Árvore de Decisão ────────────────────────────────────────────────────────
+  # max_depth controla profundidade máxima (sem limite = risco de overfitting).
+  # min_samples_split e min_samples_leaf regularizam a divisão dos nós.
+  decision_tree:
+    enabled: true
+    module: "sklearn.tree"
+    class: "DecisionTreeRegressor"
+    default_params:
+      random_state: 42
+    search_space:
+      max_depth:
+        type: "int"
+        low: 3
+        high: 20
+      min_samples_split:
+        type: "int"
+        low: 2
+        high: 50
+      min_samples_leaf:
+        type: "int"
+        low: 1
+        high: 20
+      max_features:
+        type: "categorical"
+        choices: ["sqrt", "log2"]
+
+  # ── K-Nearest Neighbors ──────────────────────────────────────────────────────
+  # KNN é sensível à escala — os dados já estão normalizados pelo preprocessing.
+  # n_neighbors é o hiperparâmetro mais importante.
+  # metric=minkowski + p=2 equivale à distância euclidiana.
+  knn:
+    enabled: true
+    module: "sklearn.neighbors"
+    class: "KNeighborsRegressor"
+    default_params:
+      n_neighbors: 5
+      n_jobs: -1
+    search_space:
+      n_neighbors:
+        type: "int"
+        low: 3
+        high: 30
+      weights:
+        type: "categorical"
+        choices: ["uniform", "distance"]
+      metric:
+        type: "categorical"
+        choices: ["euclidean", "manhattan", "minkowski"]
+      leaf_size:
+        type: "int"
+        low: 10
+        high: 60
+
+  # ── Support Vector Regression ────────────────────────────────────────────────
+  # SVR com kernel RBF é O(n²) no treino — LENTO em datasets grandes.
+  # max_samples_for_tuning: subsampling durante trials do Optuna para viabilizar
+  #   a busca. O modelo final é treinado com todos os dados.
+  # C: inverso da regularização (C alto = menos regularização = mais flexível)
+  # epsilon: margem de insensibilidade (erros < epsilon são ignorados)
+  svr:
+    enabled: false
+    module: "sklearn.svm"
+    class: "SVR"
+    default_params:
+      kernel: "rbf"
+      C: 1.0
+      epsilon: 0.1
+    max_samples_for_tuning: 5000    # subsample p/ velocidade nos trials
+    search_space:
+      kernel:
+        type: "categorical"
+        choices: ["rbf", "poly", "linear"]
+      C:
+        type: "log_float"
+        low: 0.1
+        high: 1000.0
+      epsilon:
+        type: "log_float"
+        low: 0.01
+        high: 10.0
+      gamma:
+        type: "categorical"
+        choices: ["scale", "auto"]  # só usado por rbf e poly
+
+  # ── Random Forest ────────────────────────────────────────────────────────────
+  # Ensemble de árvores independentes — baixa correlação entre elas é essencial.
+  # max_features como fração controla a diversidade entre as árvores.
+  random_forest:
+    enabled: true
+    module: "sklearn.ensemble"
+    class: "RandomForestRegressor"
+    default_params:
+      n_estimators: 100
+      random_state: 42
+      n_jobs: -1
+    search_space:
+      n_estimators:
+        type: "int"
+        low: 50
+        high: 400
+      max_depth:
+        type: "int"
+        low: 5
+        high: 30
+      min_samples_split:
+        type: "int"
+        low: 2
+        high: 20
+      max_features:
+        type: "float"
+        low: 0.2
+        high: 1.0
+
+  # ── Gradient Boosting ─────────────────────────────────────────────────────────
+  # Boosting sequencial — cada árvore corrige os erros da anterior.
+  # learning_rate e n_estimators são inversamente relacionados (shrinkage).
+  gradient_boosting:
+    enabled: true
+    module: "sklearn.ensemble"
+    class: "GradientBoostingRegressor"
+    default_params:
+      n_estimators: 100
+      random_state: 42
+    search_space:
+      n_estimators:
+        type: "int"
+        low: 50
+        high: 400
+      max_depth:
+        type: "int"
+        low: 2
+        high: 8
+      learning_rate:
+        type: "log_float"
+        low: 0.01
+        high: 0.5
+      subsample:
+        type: "float"
+        low: 0.5
+        high: 1.0
+      min_samples_split:
+        type: "int"
+        low: 2
+        high: 20
+
+  # ── XGBoost ──────────────────────────────────────────────────────────────────
+  # Gradient boosting otimizado com regularização L1/L2 e column subsampling.
+  # reg_alpha (L1) induz esparsidade; colsample_bytree reduz correlação entre árvores.
+  xgboost:
+    enabled: true
+    module: "xgboost"
+    class: "XGBRegressor"
+    default_params:
+      n_estimators: 100
+      random_state: 42
+      verbosity: 0
+      n_jobs: -1
+    search_space:
+      n_estimators:
+        type: "int"
+        low: 50
+        high: 500
+      max_depth:
+        type: "int"
+        low: 3
+        high: 10
+      learning_rate:
+        type: "log_float"
+        low: 0.01
+        high: 0.5
+      subsample:
+        type: "float"
+        low: 0.5
+        high: 1.0
+      colsample_bytree:
+        type: "float"
+        low: 0.4
+        high: 1.0
+      reg_alpha:
+        type: "log_float"
+        low: 1.0e-5
+        high: 10.0
+
+  # ── LightGBM ─────────────────────────────────────────────────────────────────
+  # Gradient boosting baseado em histogramas — mais rápido que XGBoost em datasets
+  # grandes. num_leaves controla a complexidade da árvore (leaf-wise growth).
+  lightgbm:
+    enabled: true
+    module: "lightgbm"
+    class: "LGBMRegressor"
+    default_params:
+      n_estimators: 100
+      random_state: 42
+      verbosity: -1
+      n_jobs: -1
+    search_space:
+      n_estimators:
+        type: "int"
+        low: 50
+        high: 500
+      num_leaves:
+        type: "int"
+        low: 20
+        high: 200
+      learning_rate:
+        type: "log_float"
+        low: 0.01
+        high: 0.5
+      subsample:
+        type: "float"
+        low: 0.5
+        high: 1.0
+      reg_alpha:
+        type: "log_float"
+        low: 1.0e-5
+        high: 10.0
+      colsample_bytree:
+        type: "float"
+        low: 0.4
+        high: 1.0
+
+# ── Ensembles ─────────────────────────────────────────────────────────────────
+# Construídos APÓS toda a otimização individual.
+# Os N melhores modelos (por CV RMSE) são usados como base.
+#
+# StackingRegressor: usa out-of-fold predictions como features para um meta-learner.
+#   Optuna otimiza o alpha do Ridge (meta-learner) e o flag passthrough
+#   (incluir features originais junto com as predições dos modelos base).
+#
+# VotingRegressor: média ponderada das predições dos modelos base.
+#   Optuna otimiza os pesos inteiros de cada modelo base (1..10).
+ensembles:
+  top_n_base_models: 3              # usa os N melhores individuais como base
+
+  stacking:
+    enabled: false
+    inner_cv_folds: 3               # CV interno do stacking (3 para velocidade)
+    meta_learner_search_space:
+      meta_alpha:
+        type: "log_float"
+        low: 1.0e-4
+        high: 1.0e4
+      # passthrough=True removido: concatena X bruto (com NaN) às meta-features
+      # fazendo o Ridge meta-learner falhar. Sempre passthrough=False.
+
+  voting:
+    enabled: false
+    weight_low: 1                   # peso mínimo por modelo base
+    weight_high: 10                 # peso máximo por modelo base
+
+# ── Artefatos ─────────────────────────────────────────────────────────────────
+# Todos os plots são salvos em output_dir e logados no MLFlow como artefatos.
+artifacts:
+  output_dir: "outputs/modeling"
+  save_plots: true
+  plots:
+    - "residuals"                   # resíduos vs valores ajustados
+    - "predicted_vs_actual"         # previstos vs reais (com linha ideal)
+    - "error_distribution"          # histograma + CDF dos resíduos
+    - "feature_importance"          # top 20 features
+    - "cv_fold_comparison"          # RMSE por fold (robustez)
+    - "learning_curve"              # viés-variância (tamanho do treino vs erro)
+    - "optuna_optimization_history" # evolução do objetivo por trial
+    - "optuna_param_importances"    # importância dos hiperparâmetros no Optuna
