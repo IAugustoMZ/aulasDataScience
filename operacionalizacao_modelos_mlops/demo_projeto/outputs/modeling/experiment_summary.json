@@ -1,0 +1,70 @@
+{
+  "best_model": "lightgbm",
+  "best_run_id": "1b0daaeea9ba4134b706750b3c672b4f",
+  "experiment_name": "california-housing-experiments",
+  "cv_rmse_mean": 45893.6044,
+  "cv_rmse_std": 1088.4959,
+  "cv_r2_mean": 0.8419,
+  "holdout_rmse": 43470.659,
+  "holdout_mae": 28824.2265,
+  "holdout_r2": 0.8575,
+  "holdout_mape": 16.0955,
+  "best_params": {
+    "n_estimators": 375,
+    "num_leaves": 26,
+    "learning_rate": 0.032140801220365445,
+    "subsample": 0.5292562459410374,
+    "reg_alpha": 1.3879239037054991,
+    "colsample_bytree": 0.6237124167248845
+  },
+  "reducer_params": {
+    "method": "none"
+  },
+  "top3_base_models": [
+    "lightgbm",
+    "xgboost",
+    "random_forest"
+  ],
+  "all_models_ranked": [
+    {
+      "modelo": "lightgbm",
+      "cv_rmse_mean": 45893.60440232302,
+      "cv_r2_mean": 0.8418878939324858
+    },
+    {
+      "modelo": "xgboost",
+      "cv_rmse_mean": 46360.19821017093,
+      "cv_r2_mean": 0.8386906798699748
+    },
+    {
+      "modelo": "random_forest",
+      "cv_rmse_mean": 48609.49781919491,
+      "cv_r2_mean": 0.8225656925580519
+    },
+    {
+      "modelo": "gradient_boosting",
+      "cv_rmse_mean": 49421.552050934035,
+      "cv_r2_mean": 0.8166395355112767
+    },
+    {
+      "modelo": "knn",
+      "cv_rmse_mean": 53932.65063820592,
+      "cv_r2_mean": 0.7816655952351167
+    },
+    {
+      "modelo": "decision_tree",
+      "cv_rmse_mean": 60621.84797904195,
+      "cv_r2_mean": 0.7241433808413267
+    },
+    {
+      "modelo": "linear_regression",
+      "cv_rmse_mean": 64420.77658906847,
+      "cv_r2_mean": 0.6883717321638804
+    },
+    {
+      "modelo": "ridge",
+      "cv_rmse_mean": 64421.25728159782,
+      "cv_r2_mean": 0.6883686821776971
+    }
+  ]
+}

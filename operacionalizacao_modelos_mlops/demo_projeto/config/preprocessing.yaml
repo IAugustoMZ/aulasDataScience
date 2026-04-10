@@ -25,13 +25,20 @@ imputation:
 # ── 2. Flags Binárias ─────────────────────────────────────────────────────────
 # Identificam valores censurados ou capados no dataset.
 # Esses pontos têm comportamento especial que modelos precisam aprender.
+#
+# ⚠  Atenção MLOps — Inferência:
+#    Flags marcadas com inference_safe: false são criadas apenas para análise
+#    exploratória. NÃO devem constar em features_to_keep pois dependem de
+#    colunas indisponíveis em produção (ex: o target median_house_value).
 binary_flags:
   - column: "housing_median_age"
     value: 52
     new_column: "age_at_cap"          # 1 = bloco com idade máxima reportada
+    inference_safe: true              # housing_median_age está disponível em inferência
   - column: "median_house_value"
     value: 500001
     new_column: "is_capped_target"    # 1 = valor censurado (verdadeiro ≥ $500,001)
+    inference_safe: false             # ⚠ TARGET — indisponível em inferência; NÃO incluir em features_to_keep
 
 # ── 3. Features de Razão ──────────────────────────────────────────────────────
 # Razões são mais informativas que totais absolutos porque normalizam pelo
@@ -160,7 +167,7 @@ feature_selection:
     - "median_income_squared"
     - "housing_median_age_squared"
     - "median_income_x_housing_median_age"
-    # ── Flags ──
-    - "is_capped_target"
     # ── Target ──
+    # ⚠ is_capped_target REMOVIDO: baseia-se em median_house_value (target)
+    #   que não existe em inferência → data leakage se incluído como feature.
     - "median_house_value"

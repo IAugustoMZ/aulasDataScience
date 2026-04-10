@@ -79,7 +79,7 @@ feature_reduction:
   search_space:
     method:
       type: "categorical"
-      choices: ["none", "rfe", "pca", "kpca"]
+      choices: ["none", "pca"]        # kpca excluído: O(n³) na kernel matrix, inviável em 16K amostras
 
   rfe:
     n_features_to_select: 15
@@ -128,7 +128,8 @@ feature_reduction:
 # ── Configuração Geral do Experimento ─────────────────────────────────────────
 modeling:
   experiment_name: "california-housing-experiments"
-  tracking_uri: "mlruns"            # caminho local (sqlite:///mlruns.db para produção)
+  tracking_uri: "sqlite:///mlruns.db"   # SQLite — substitui a pasta mlruns/
+  registry_name: "california-housing-best"
   random_seed: 13
 
 # ── Divisão Treino / Holdout ──────────────────────────────────────────────────
@@ -146,11 +147,25 @@ cv:
   n_splits: 3
   shuffle: true
 
-# ── Optuna ────────────────────────────────────────────────────────────────────
+# ── Otimizador ───────────────────────────────────────────────────────────────
+# strategy: seleciona a estratégia de busca de hiperparâmetros
+#   optuna          → Bayesian TPE via Optuna (padrão recomendado)
+#   grid_search     → GridSearchCV — exaustivo, bom para espaços pequenos
+#   randomized_search → RandomizedSearchCV — rápido para espaços grandes
+#
 # default_trials: nº de trials usado por TODOS os modelos e ensembles.
 # Para sobrescrever por modelo, adicione optuna_trials: N na entrada do modelo.
-optuna:
-  default_trials: 3
+optimizer:
+  strategy: "optuna"              # optuna | grid_search | randomized_search
+
+  optuna:
+    default_trials: 3
+    sampler: "tpe"                # tpe | random | cmaes
+
+  grid_search: {}                 # sem config extra — usa search_space diretamente
+
+  randomized_search:
+    n_iter: 50                    # número de combinações aleatórias a amostrar
 
 # ── Métricas ──────────────────────────────────────────────────────────────────
 # primary: usada para selecionar o melhor modelo e direcionar o Optuna

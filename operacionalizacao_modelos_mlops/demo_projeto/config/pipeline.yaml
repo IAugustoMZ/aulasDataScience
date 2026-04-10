@@ -10,6 +10,8 @@ paths:
   raw_data_dir: "data/raw"
   processed_data_dir: "data/processed"
   output_filename: "house_price.parquet"
+  features_data_dir: "data/features"
+  features_filename: "house_price_features.parquet"
 
 execution:
   skip_download_if_exists: true
