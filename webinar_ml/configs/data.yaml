@@ -1,0 +1,141 @@
+# ============================================================
+# Data Generation & Pipeline Configuration
+# All paths are relative to project root
+# ============================================================
+
+paths:
+  raw: "data/raw/registros_seguranca.parquet"
+  train: "data/processed/train.parquet"
+  test: "data/processed/test.parquet"
+  unannotated: "data/processed/unannotated.parquet"
+  labels_config: "configs/labels.yaml"
+
+# ============================================================
+# Dataset Generation Parameters
+# ============================================================
+generation:
+  random_seed: 42
+  total_records: 5000
+
+  # Class distribution (must sum to 1.0)
+  class_distribution:
+    baixo: 0.40
+    medio: 0.35
+    alto: 0.18
+    critico: 0.07
+
+  # Noise injection
+  noise:
+    # Fraction of annotated records with intentionally wrong labels
+    mislabeled_rate: 0.08
+    # Fraction of records with ambiguous labels (adjacent class)
+    ambiguous_rate: 0.05
+    # Fraction of total records left unannotated (label = null)
+    unannotated_rate: 0.20
+
+  # Text generation controls
+  text:
+    min_words: 12
+    max_words: 60
+    # Probability of including a chemical product reference in the narrative
+    chemical_mention_prob: 0.45
+    # Probability of mentioning a specific norm (NR-10, NR-33, NR-35)
+    norm_mention_prob: 0.30
+    # Probability of including a time reference (turno, hora)
+    time_mention_prob: 0.60
+
+# ============================================================
+# Train / Test Split
+# ============================================================
+split:
+  test_size: 0.20
+  stratify_by: "classe_risco"
+  # Only annotated records go into train/test; unannotated go to unannotated.parquet
+  exclude_unannotated: true
+
+# ============================================================
+# Schema — output column definitions
+# ============================================================
+schema:
+  id:
+    dtype: string
+    description: "UUID único do registro"
+    nullable: false
+
+  data_ocorrencia:
+    dtype: date
+    description: "Data da ocorrência (sem hora)"
+    nullable: false
+
+  data_hora_ocorrencia:
+    dtype: datetime
+    description: "Timestamp completo da ocorrência (America/Sao_Paulo, UTC-3)"
+    nullable: false
+
+  turno:
+    dtype: string
+    description: "Turno em que ocorreu (A/B/C)"
+    nullable: false
+
+  area_fpso:
+    dtype: string
+    description: "Área da plataforma onde ocorreu"
+    nullable: false
+
+  equipamento_classe:
+    dtype: string
+    description: "Classe do equipamento envolvido"
+    nullable: false
+
+  equipamento_subclasse:
+    dtype: string
+    description: "Subclasse do equipamento envolvido"
+    nullable: false
+
+  produto_quimico:
+    dtype: string
+    description: "Produto químico envolvido (ou N/A)"
+    nullable: false
+
+  tipo_ocorrencia:
+    dtype: string
+    description: "Tipo da ocorrência"
+    nullable: false
+
+  fator_risco:
+    dtype: string
+    description: "Fator de risco predominante"
+    nullable: false
+
+  relato:
+    dtype: string
+    description: "Narrativa livre do relato de segurança (pt-BR)"
+    nullable: false
+
+  classe_risco:
+    dtype: string
+    description: "Rótulo de risco: baixo | medio | alto | critico (null se não anotado)"
+    nullable: true
+
+  anotado:
+    dtype: bool
+    description: "True se o registro possui rótulo confirmado"
+    nullable: false
+
+  ruido:
+    dtype: bool
+    description: "True se o rótulo foi intencionalmente corrompido (para fins pedagógicos)"
+    nullable: false
+
+  ambiguo:
+    dtype: bool
+    description: "True se o rótulo é limítrofe entre duas classes"
+    nullable: false
+
+# ============================================================
+# Parquet write options
+# ============================================================
+parquet:
+  engine: "pyarrow"
+  compression: "snappy"
+  index: false

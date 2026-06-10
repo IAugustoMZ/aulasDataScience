@@ -1,0 +1,12 @@
+feature,tipo,transformador,motivo,prioridade
+relato,texto,"TfidfVectorizer(sublinear_tf=True, ngram_range=(1,2))",Feature principal — vocabulário diverge por classe (visto nos tokens),1
+relato,texto (avançado),SentenceTransformer → vetor denso 384d,t-SNE mostrou clusters semânticos não capturados pelo BoW,2
+fator_risco,categórica,OneHotEncoder(handle_unknown='ignore'),Cramér's V = 0.212 (≥ threshold 0.15),3
+area_fpso,categórica,OneHotEncoder(handle_unknown='ignore'),Cramér's V = 0.187 (≥ threshold 0.15),3
+equipamento_subclasse,categórica,OneHotEncoder(handle_unknown='ignore'),Cramér's V = 0.182 (≥ threshold 0.15),3
+"hora_sin, hora_cos",temporal (cíclica),FunctionTransformer (derivar do timestamp),Encoding cíclico preserva continuidade hora 23→0; pico crítico em passagem de turno,3
+passagem_turno,temporal (binária),FunctionTransformer → bool → int,Janelas 06h-07h / 18h-19h concentram maior proporção de crítico,3
+equipamento_classe,categórica,Omitir (baixo sinal),Cramér's V = 0.143 (< threshold 0.15),5
+produto_quimico,categórica,Omitir (baixo sinal),Cramér's V = 0.060 (< threshold 0.15),5
+tipo_ocorrencia,categórica,Omitir (baixo sinal),Cramér's V = 0.055 (< threshold 0.15),5
+turno,categórica,Omitir (baixo sinal),Cramér's V = 0.037 (< threshold 0.15),5

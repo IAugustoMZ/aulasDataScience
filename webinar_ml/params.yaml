@@ -1,0 +1,177 @@
+# ============================================================
+# params.yaml — fonte única de verdade para hiperparâmetros
+# Lido pelo DVC (dvc.yaml) e pelos scripts de treino.
+# Altere aqui; nunca hardcode valores nos scripts.
+# ============================================================
+
+base:
+  random_seed: 42
+  target_col: classe_risco
+  class_order: [baixo, medio, alto, critico]
+
+# ── Features ──────────────────────────────────────────────────────────────────
+features:
+  text_col: relato
+  tfidf:
+    max_features: 20000
+    ngram_range: [1, 2]
+    min_df: 3
+    sublinear_tf: true
+  categorical:
+    # apenas features com Cramér's V >= 0.15 (ver NB02)
+    - fator_risco
+    - area_fpso
+  numeric:
+    - n_palavras
+    - hora_sin
+    - hora_cos
+    - passagem_turno
+
+# ── Modelos clássicos ──────────────────────────────────────────────────────────
+models:
+  logistic_regression:
+    C: [0.1, 1.0, 10.0]
+    max_iter: 1000
+    class_weight: balanced
+    solver: lbfgs
+
+  linear_svc:
+    C: [0.1, 1.0, 10.0]
+    max_iter: 2000
+    class_weight: balanced
+
+  random_forest:
+    n_estimators: [100, 200]
+    max_depth: [null, 10, 20]
+    min_samples_leaf: 2
+    class_weight: balanced
+
+  decision_tree:
+    max_depth: [5, 10, 20, null]
+    min_samples_leaf: [1, 5, 10]
+    class_weight: balanced
+
+  # gradient_boosting: disabled (lento demais para webinar)
+  # gradient_boosting:
+  #   n_estimators: [100, 200]
+  #   learning_rate: [0.05, 0.1, 0.2]
+  #   max_depth: [3, 5, 7]
+
+  xgboost:
+    n_estimators: [100, 200]
+    learning_rate: [0.05, 0.1, 0.2]
+    max_depth: [3, 5, 7]
+
+  knn:
+    n_neighbors: [3, 5, 11, 21]
+    weights: [uniform, distance]
+
+# ── Métrica de negócio: EACE ──────────────────────────────────────────────────
+# Fonte: BUSINESS_CASE.md seção 2.1 e 3.1
+# Linha = classe verdadeira, coluna = classe predita
+# Ordem: [baixo, medio, alto, critico]
+eace:
+  annual_records: 15000
+  class_distribution:
+    baixo:   0.40
+    medio:   0.35
+    alto:    0.18
+    critico: 0.07
+  # Matriz de custos em R$ (célula [i][j] = custo quando true=i, pred=j)
+  cost_matrix:
+    #              baixo    medio     alto   critico
+    baixo:    [       0,    2000,   15000,   50000]
+    medio:    [   80000,       0,    8000,   30000]
+    alto:     [  650000,  120000,       0,   25000]
+    critico:  [ 3200000, 1800000,  400000,       0]
+
+# ── Seleção estatística de modelos ────────────────────────────────────────────
+model_selection:
+  # Métrica de negócio: EACE (minimizar) — menor é melhor
+  business_metric: eace
+  # Métrica usada no CV e no teste de McNemar
+  # recall_critico pressiona diretamente o modelo a não perder incidentes críticos;
+  # EACE fica reservado para comparação final no test set
+  cv_metric: recall_critico
+  # Nível de significância para o teste de McNemar
+  alpha: 0.05
+
+# ── Cross-validation ───────────────────────────────────────────────────────────
+cv:
+  n_splits: 5
+  scoring: recall_critico
+  verbose: 1
+  # RandomizedSearchCV: número de combinações testadas por modelo
+  n_iter_random: 10
+
+# ── MLflow ────────────────────────────────────────────────────────────────────
+mlflow:
+  experiment_name: webinar_ml_classic_baselines
+  # SQLite backend — compatível com MLflow 3.x (FileStore foi descontinuado)
+  tracking_uri: sqlite:///mlflow.db
+  # KPI do negócio: recall da classe crítico
+  primary_metric: recall_critico
+
+# ── spaCy ─────────────────────────────────────────────────────────────────────
+spacy:
+  experiment_name: webinar_ml_spacy
+  # Modelo base do spaCy para português
+  base_model: pt_core_news_sm
+  # textcat: arquitetura rasa (BOW) — baseline rápido
+  textcat:
+    architecture: bow         # bow = bag-of-words; ensemble = bow + tok2vec
+    exclusive_classes: true
+    # Número de épocas de treino
+    n_iter: 30
+    # Dropout para regularização
+    dropout: 0.2
+    # Batch size inicial e tamanho composto (spaCy compoundze batches)
+    batch_size: 8
+    batch_size_compound: 1.001
+  # textcat_deep: arquitetura com redes neurais profundas (tok2vec)
+  # Comparada ao BOW no NB04 para medir o ganho de profundidade
+  textcat_deep:
+    # ensemble = tok2vec (CNN) + BOW; aproveitam vetores do pt_core_news_sm
+    architecture: ensemble
+    exclusive_classes: true
+    n_iter: 40
+    dropout: 0.15
+    batch_size: 8
+    batch_size_compound: 1.001
+    # tok2vec embutido no ensemble herda os embeddings do modelo base
+    # width e depth controlam o CNN interno — padrão do spaCy funciona bem
+    tok2vec_width: 96
+    tok2vec_depth: 4
+  # Otimizador (sgd default do spaCy)
+  optimizer:
+    learn_rate: 0.001
+    b1: 0.9
+    b2: 0.999
+  # Threshold de decisão para recall-recall tradeoff
+  # Abaixo desse score o registro é classificado como 'critico'
+  critico_threshold: 0.35
+  # Curva de aprendizado: frações do treino a avaliar
+  learning_curve_fracs: [0.1, 0.2, 0.4, 0.6, 0.8, 1.0]
+
+# ── Registros não anotados ────────────────────────────────────────────────────
+# max_cee_brl: custo esperado de erro máximo tolerável para rotular um registro.
+# Registros com CEE > este valor são deixados sem previsão (abstenção).
+# R$ 50.000 = custo de confundir baixo↔alto (um degrau tolerável).
+# Confundir crítico↔baixo (R$ 3.2M) nunca passa esse filtro.
+unannotated:
+  max_cee_brl: 50000
+
+# ── Híbrido (ML clássico + spaCy) ─────────────────────────────────────────────
+hybrid:
+  experiment_name: webinar_ml_hybrid
+  # Estratégia de fusão:
+  #   "override"  — se spaCy detecta padrão crítico, sobrescreve predição ML
+  #   "weighted"  — média ponderada dos scores
+  #   "stack"     — meta-modelo treinado sobre os scores dos dois
+  fusion_strategy: override
+  # Peso do spaCy na média ponderada (só usado quando fusion_strategy=weighted)
+  spacy_weight: 0.6
+  # Threshold mínimo do score spaCy para acionar o override de 'critico'
+  override_threshold: 0.40
+  # Para estratégia "stack": estimador do meta-modelo
+  stack_meta_model: logistic_regression

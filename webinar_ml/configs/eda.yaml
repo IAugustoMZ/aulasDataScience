@@ -1,0 +1,177 @@
+# ============================================================
+# EDA Configuration
+# Controls all analysis, thresholds, and plot aesthetics.
+# No values should be hardcoded in src/eda.py or notebooks.
+# ============================================================
+
+paths:
+  raw: "data/raw/registros_seguranca.parquet"
+  train: "data/processed/train.parquet"
+  test: "data/processed/test.parquet"
+  unannotated: "data/processed/unannotated.parquet"
+  output_dir: "data/eda"          # where computed artefacts are saved
+
+# ============================================================
+# Class order (for consistent axis ordering in all plots)
+# ============================================================
+class_order:
+  - baixo
+  - medio
+  - alto
+  - critico
+
+class_palette:
+  baixo:   "#4CAF50"   # green
+  medio:   "#FFC107"   # amber
+  alto:    "#FF5722"   # deep orange
+  critico: "#B71C1C"   # dark red
+
+# ============================================================
+# Text analysis
+# ============================================================
+text:
+  column: "relato"
+  min_token_length: 3           # tokens shorter than this are ignored in freq counts
+  top_n_tokens: 30              # top N tokens to show in frequency bar chart
+  top_n_bigrams: 20             # top N bigrams
+  stopwords_extra:              # domain stopwords appended to NLTK pt stopwords
+    - "durante"
+    - "foram"
+    - "sendo"
+    - "pelo"
+    - "pela"
+    - "pelos"
+    - "pelas"
+    - "para"
+    - "como"
+    - "com"
+    - "sem"
+    - "nos"
+    - "nas"
+    - "dos"
+    - "das"
+    - "pelo"
+    - "uma"
+    - "um"
+    - "este"
+    - "esta"
+    - "esse"
+    - "essa"
+    - "isso"
+    - "ocorrência"
+    - "registro"
+    - "registrado"
+    - "realizado"
+    - "realizada"
+    - "conforme"
+    - "atividade"
+  word_length_bins: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200]
+
+# ============================================================
+# Imbalance analysis
+# ============================================================
+imbalance:
+  # Imbalance ratio: majority / minority — flag if above this
+  flag_threshold: 5.0
+  # Minimum fraction for a class to be considered "well-represented"
+  min_fraction: 0.10
+
+# ============================================================
+# Noise analysis
+# ============================================================
+noise:
+  # Columns that flag noise conditions
+  mislabeled_col: "ruido"
+  ambiguous_col:  "ambiguo"
+  annotated_col:  "anotado"
+
+# ============================================================
+# Temporal analysis
+# ============================================================
+temporal:
+  date_col: "data_ocorrencia"
+  datetime_col: "data_hora_ocorrencia"
+  freq: "ME"          # pandas resample frequency: ME = month end
+  rolling_window: 3   # rolling average window (months)
+
+# ============================================================
+# Categorical feature analysis
+# ============================================================
+categorical_features:
+  columns:
+    - area_fpso
+    - equipamento_classe
+    - equipamento_subclasse
+    - produto_quimico
+    - tipo_ocorrencia
+    - fator_risco
+    - turno
+  top_n_per_feature: 12    # show top N categories in bar charts
+
+# ============================================================
+# Correlation / association analysis
+# ============================================================
+association:
+  # Features to cross-tabulate against classe_risco
+  cross_tab_features:
+    - area_fpso
+    - equipamento_classe
+    - produto_quimico
+    - fator_risco
+  # Cramér's V threshold to flag strong associations
+  cramers_v_threshold: 0.15
+
+# ============================================================
+# Feature analysis (notebook 02_feature_analysis)
+# ============================================================
+feature_analysis:
+
+  # Cramér's V
+  cramers_v_threshold: 0.15        # limiar para sinal "forte" — incluir no pipeline
+  categorical_features:
+    - area_fpso
+    - equipamento_classe
+    - equipamento_subclasse
+    - produto_quimico
+    - tipo_ocorrencia
+    - fator_risco
+    - turno
+
+  # Interações categóricas
+  interaction_top_n: 8             # top N categorias em cada eixo do heatmap de interação
+
+  # TF-IDF para projeção 2D
+  tfidf:
+    max_features: 5000
+    ngram_range: [1, 2]
+    min_df: 3
+
+  # BERT embeddings
+  bert:
+    model_name: "paraphrase-multilingual-MiniLM-L12-v2"
+    sample_n: 1000                 # registros por execução (custo de encoding em CPU)
+    batch_size: 64
+
+  # t-SNE
+  tsne:
+    perplexity: 30
+    n_iter: 1000
+
+  # Features temporais derivadas
+  temporal:
+    handover_windows:              # janelas de passagem de turno (hora_inicio, hora_fim)
+      - [6, 7]
+      - [18, 19]
+
+# ============================================================
+# Plot settings
+# ============================================================
+plots:
+  figsize_default: [10, 5]
+  figsize_wide:    [14, 5]
+  figsize_tall:    [10, 8]
+  figsize_grid:    [14, 10]
+  dpi: 120
+  style: "seaborn-v0_8-whitegrid"
+  font_scale: 1.1
+  save_format: "png"    # png | svg

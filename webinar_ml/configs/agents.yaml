@@ -1,0 +1,218 @@
+# ============================================================
+# Agent Roster — webinar_ml project
+# Every agent definition here maps to a file in .claude/agents/
+# ============================================================
+
+# Consultation order rule:
+#   project-context MUST be consulted before any other agent
+#   on questions of scope, lesson arc, or architectural direction.
+
+agents:
+
+  # ----------------------------------------------------------
+  # GATE: always consulted first
+  # ----------------------------------------------------------
+  - id: project-context
+    file: .claude/agents/project-context.md
+    role: "Project Context Guardian"
+    consult_order: 1
+    mandatory_first: true
+    description: >
+      Owns the lesson arc, audience profile, pedagogical objectives,
+      and the 'why' behind every technical choice. Validates that any
+      proposal fits the webinar narrative before implementation starts.
+    triggers:
+      - "any new feature or notebook"
+      - "any change to project structure"
+      - "any technology choice"
+      - "any change to the lesson flow"
+
+  # ----------------------------------------------------------
+  # DOMAIN
+  # ----------------------------------------------------------
+  - id: fpso-safety-expert
+    file: .claude/agents/fpso-safety-expert.md
+    role: "FPSO & Occupational Safety Domain Expert"
+    consult_order: 2
+    description: >
+      Deep knowledge of FPSO platform operations, Brazilian safety norms
+      (NR-10, NR-33, NR-35), incident classification taxonomies, and
+      what 'risk level' means in real offshore operations.
+    triggers:
+      - "label taxonomy decisions"
+      - "incident narrative realism"
+      - "FPSO area definitions"
+      - "chemical hazard classification"
+      - "regulatory framing"
+
+  # ----------------------------------------------------------
+  # DATA & STATISTICS
+  # ----------------------------------------------------------
+  - id: data-scientist
+    file: .claude/agents/data-scientist.md
+    role: "Data Scientist"
+    consult_order: 3
+    description: >
+      EDA, feature engineering strategy, class imbalance handling,
+      data quality assessment, and overall modeling strategy.
+    triggers:
+      - "exploratory analysis"
+      - "feature decisions"
+      - "class imbalance"
+      - "data quality"
+      - "dataset schema"
+
+  - id: statistician
+    file: .claude/agents/statistician.md
+    role: "Statistician"
+    consult_order: 4
+    description: >
+      Metric selection, statistical significance, confidence intervals,
+      hypothesis testing, and defensible model comparison methodology.
+    triggers:
+      - "metric selection"
+      - "model comparison"
+      - "significance testing"
+      - "evaluation design"
+      - "result interpretation"
+
+  - id: data-annotator
+    file: .claude/agents/data-annotator.md
+    role: "Data Annotation Specialist"
+    consult_order: 5
+    description: >
+      Annotation schema design, label ambiguity rules, noise injection
+      strategy, inter-annotator agreement, and annotation guidelines.
+    triggers:
+      - "label schema"
+      - "noise design"
+      - "ambiguity rules"
+      - "annotation guidelines"
+
+  # ----------------------------------------------------------
+  # MACHINE LEARNING & NLP
+  # ----------------------------------------------------------
+  - id: ml-engineer
+    file: .claude/agents/ml-engineer.md
+    role: "ML Engineer"
+    consult_order: 6
+    description: >
+      Pipeline design, model selection, hyperparameter tuning,
+      cross-validation strategy, and model persistence.
+      Covers classic ML (TF-IDF, LogReg, SVM, RF) and BERT embeddings.
+    triggers:
+      - "model training"
+      - "pipeline design"
+      - "hyperparameter tuning"
+      - "cross-validation"
+      - "BERT embeddings"
+      - "classic ML"
+
+  - id: nlp-engineer
+    file: .claude/agents/nlp-engineer.md
+    role: "NLP Engineer"
+    consult_order: 7
+    description: >
+      spaCy pipelines, Portuguese tokenization, custom textcat training,
+      NER, linguistic feature extraction, and spaCy model evaluation.
+    triggers:
+      - "spaCy"
+      - "textcat"
+      - "Portuguese NLP"
+      - "tokenization"
+      - "NER"
+      - "linguistic features"
+
+  - id: ai-engineer
+    file: .claude/agents/ai-engineer.md
+    role: "AI Engineer"
+    consult_order: 8
+    description: >
+      LangGraph workflow design, provider-agnostic LLM integration
+      (Groq/Anthropic/OpenAI), structured output, prompt engineering,
+      zero-shot vs few-shot strategy, and cost/latency analysis.
+    triggers:
+      - "LLM integration"
+      - "LangGraph"
+      - "prompt engineering"
+      - "structured output"
+      - "zero-shot"
+      - "few-shot"
+      - "Groq API"
+      - "cost analysis"
+
+  # ----------------------------------------------------------
+  # ENGINEERING & ARCHITECTURE
+  # ----------------------------------------------------------
+  - id: software-architect
+    file: .claude/agents/software-architect.md
+    role: "Software Architect"
+    consult_order: 9
+    description: >
+      Folder structure, module boundaries, config-driven design,
+      separation of concerns, and the path from lesson code to
+      production-grade implementation.
+    triggers:
+      - "project structure"
+      - "module design"
+      - "config architecture"
+      - "reusability"
+      - "production pathway"
+
+  - id: clean-code-solid
+    file: .claude/agents/clean-code-solid.md
+    role: "Clean Code & SOLID Principles Reviewer"
+    consult_order: 10
+    description: >
+      Reviews every src/ file before finalization: naming conventions,
+      single responsibility, open/closed, dependency inversion,
+      no magic numbers, no hardcoded paths, no commented-out code.
+    triggers:
+      - "before any src/ file is finalized"
+      - "code review"
+      - "refactoring"
+
+  - id: security-engineer
+    file: .claude/agents/security-engineer.md
+    role: "Security Engineer"
+    consult_order: 11
+    description: >
+      API key management, no PII in notebooks or Parquet files,
+      safe data handling, .env patterns, and secrets hygiene.
+    triggers:
+      - "API keys"
+      - "environment variables"
+      - "PII"
+      - "data privacy"
+      - "credentials"
+
+  # ----------------------------------------------------------
+  # PEDAGOGY & EVALUATION
+  # ----------------------------------------------------------
+  - id: pedagogical-designer
+    file: .claude/agents/pedagogical-designer.md
+    role: "Pedagogical Designer"
+    consult_order: 12
+    description: >
+      Structures learning objectives per notebook, progressive complexity,
+      'why does this matter' moments, live demo flow, and exercises.
+    triggers:
+      - "notebook structure"
+      - "learning objectives"
+      - "lesson flow"
+      - "exercises"
+      - "live demo"
+
+  - id: evaluation-specialist
+    file: .claude/agents/evaluation-specialist.md
+    role: "Model Evaluation Specialist"
+    consult_order: 13
+    description: >
+      Designs the apples-to-apples benchmark across all 3 model tiers
+      (classic, spaCy DL, LLM): same test set, same metrics,
+      latency, cost, explainability, and the final comparison notebook.
+    triggers:
+      - "model comparison"
+      - "benchmark design"
+      - "evaluation fairness"
+      - "notebook 05"

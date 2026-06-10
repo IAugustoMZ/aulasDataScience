@@ -1,0 +1,26 @@
+{
+  "cramers_v_threshold": 0.15,
+  "strong_signal_features": [
+    "fator_risco",
+    "area_fpso",
+    "equipamento_subclasse"
+  ],
+  "cramers_v_by_feature": {
+    "fator_risco": 0.212,
+    "area_fpso": 0.187,
+    "equipamento_subclasse": 0.1822,
+    "equipamento_classe": 0.1431,
+    "produto_quimico": 0.0603,
+    "tipo_ocorrencia": 0.0553,
+    "turno": 0.0367
+  },
+  "significant_features_chi2_kruskal": [
+    "comprimento_relato",
+    "area_fpso",
+    "equipamento_classe",
+    "equipamento_subclasse",
+    "fator_risco"
+  ],
+  "n_train": 3180,
+  "n_annotated": 3180
+}

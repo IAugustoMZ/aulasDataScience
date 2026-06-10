@@ -1,0 +1,172 @@
+{
+  "best_by_business_metric": "logistic_regression",
+  "best_by_statistical_test": "logistic_regression",
+  "business_metric": "eace",
+  "statistical_metric": "recall_critico",
+  "alpha": 0.05,
+  "same_winner": true,
+  "eace_summary": {
+    "logistic_regression": {
+      "eace_brl": 977066377.53,
+      "recall_critico": 0.5
+    },
+    "random_forest": {
+      "eace_brl": 1020062702.13,
+      "recall_critico": 0.4722
+    },
+    "xgboost": {
+      "eace_brl": 1023919871.06,
+      "recall_critico": 0.4306
+    },
+    "linear_svc": {
+      "eace_brl": 1036880723.49,
+      "recall_critico": 0.4583
+    },
+    "decision_tree": {
+      "eace_brl": 1170789284.13,
+      "recall_critico": 0.4444
+    },
+    "knn": {
+      "eace_brl": 2357126598.42,
+      "recall_critico": 0.1528
+    }
+  },
+  "pairwise_mcnemar": [
+    {
+      "model_a": "logistic_regression",
+      "model_b": "linear_svc",
+      "mcnemar_stat": 0.1739,
+      "p_value": 0.6767,
+      "significant": false,
+      "winner": "logistic_regression"
+    },
+    {
+      "model_a": "logistic_regression",
+      "model_b": "random_forest",
+      "mcnemar_stat": 0.0851,
+      "p_value": 0.7705,
+      "significant": false,
+      "winner": "logistic_regression"
+    },
+    {
+      "model_a": "logistic_regression",
+      "model_b": "decision_tree",
+      "mcnemar_stat": 85.0514,
+      "p_value": 0.0,
+      "significant": true,
+      "winner": "logistic_regression"
+    },
+    {
+      "model_a": "logistic_regression",
+      "model_b": "xgboost",
+      "mcnemar_stat": 0.625,
+      "p_value": 0.4292,
+      "significant": false,
+      "winner": "logistic_regression"
+    },
+    {
+      "model_a": "logistic_regression",
+      "model_b": "knn",
+      "mcnemar_stat": 283.4839,
+      "p_value": 0.0,
+      "significant": true,
+      "winner": "logistic_regression"
+    },
+    {
+      "model_a": "linear_svc",
+      "model_b": "random_forest",
+      "mcnemar_stat": 0.5682,
+      "p_value": 0.451,
+      "significant": false,
+      "winner": "random_forest"
+    },
+    {
+      "model_a": "linear_svc",
+      "model_b": "decision_tree",
+      "mcnemar_stat": 89.7989,
+      "p_value": 0.0,
+      "significant": true,
+      "winner": "linear_svc"
+    },
+    {
+      "model_a": "linear_svc",
+      "model_b": "xgboost",
+      "mcnemar_stat": 0.1212,
+      "p_value": 0.7277,
+      "significant": false,
+      "winner": "linear_svc"
+    },
+    {
+      "model_a": "linear_svc",
+      "model_b": "knn",
+      "mcnemar_stat": 283.6122,
+      "p_value": 0.0,
+      "significant": true,
+      "winner": "linear_svc"
+    },
+    {
+      "model_a": "random_forest",
+      "model_b": "decision_tree",
+      "mcnemar_stat": 86.3476,
+      "p_value": 0.0,
+      "significant": true,
+      "winner": "random_forest"
+    },
+    {
+      "model_a": "random_forest",
+      "model_b": "xgboost",
+      "mcnemar_stat": 1.7297,
+      "p_value": 0.1884,
+      "significant": false,
+      "winner": "random_forest"
+    },
+    {
+      "model_a": "random_forest",
+      "model_b": "knn",
+      "mcnemar_stat": 273.7195,
+      "p_value": 0.0,
+      "significant": true,
+      "winner": "random_forest"
+    },
+    {
+      "model_a": "decision_tree",
+      "model_b": "xgboost",
+      "mcnemar_stat": 98.1078,
+      "p_value": 0.0,
+      "significant": true,
+      "winner": "decision_tree"
+    },
+    {
+      "model_a": "decision_tree",
+      "model_b": "knn",
+      "mcnemar_stat": 126.9918,
+      "p_value": 0.0,
+      "significant": true,
+      "winner": "decision_tree"
+    },
+    {
+      "model_a": "xgboost",
+      "model_b": "knn",
+      "mcnemar_stat": 295.1022,
+      "p_value": 0.0,
+      "significant": true,
+      "winner": "xgboost"
+    }
+  ],
+  "ranking_by_business": [
+    "logistic_regression",
+    "random_forest",
+    "xgboost",
+    "linear_svc",
+    "decision_tree",
+    "knn"
+  ],
+  "ranking_by_cv_metric": [
+    "logistic_regression",
+    "random_forest",
+    "linear_svc",
+    "decision_tree",
+    "xgboost",
+    "knn"
+  ]
+}

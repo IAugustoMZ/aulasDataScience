@@ -1,0 +1,35 @@
+{
+  "best_hybrid_strategy": "hibrido_override",
+  "comparison": {
+    "ml_classico": {
+      "recall_critico": 0.5,
+      "f1_macro": 0.7726,
+      "eace_brl": 977066377.53,
+      "accuracy": 0.8329
+    },
+    "spacy_textcat": {
+      "recall_critico": 0.5556,
+      "f1_macro": 0.6821,
+      "eace_brl": 1028070170.83,
+      "accuracy": 0.7462
+    },
+    "hibrido_override": {
+      "recall_critico": 0.5278,
+      "f1_macro": 0.7498,
+      "eace_brl": 976595921.19,
+      "accuracy": 0.8141
+    },
+    "hibrido_weighted": {
+      "recall_critico": 0.4167,
+      "f1_macro": 0.724,
+      "eace_brl": 1094616973.54,
+      "accuracy": 0.7927
+    },
+    "hibrido_stack": {
+      "recall_critico": 0.5139,
+      "f1_macro": 0.728,
+      "eace_brl": 983200817.75,
+      "accuracy": 0.7827
+    }
+  }
+}

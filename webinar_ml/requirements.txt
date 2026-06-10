@@ -1,0 +1,43 @@
+# ── Core data ──────────────────────────────────────────────────────────────────
+pandas>=2.2,<3.0
+numpy>=1.26,<2.0
+pyarrow>=16.0
+
+# ── ML / Classic tier (notebook 02) ───────────────────────────────────────────
+scikit-learn>=1.5
+imbalanced-learn>=0.12
+
+# ── NLP / spaCy tier (notebook 03) ────────────────────────────────────────────
+spacy>=3.7
+# Portuguese model installed separately:
+#   python -m spacy download pt_core_news_sm
+
+# ── LLM tier (notebook 04) ────────────────────────────────────────────────────
+anthropic>=0.30
+python-dotenv>=1.0
+
+# ── Visualisation & notebooks ─────────────────────────────────────────────────
+matplotlib>=3.9
+seaborn>=0.13
+jupyter>=1.1
+ipykernel>=6.29
+
+# ── NLP utilities ─────────────────────────────────────────────────────────────
+nltk>=3.9
+
+# ── Config & utils ────────────────────────────────────────────────────────────
+pyyaml>=6.0
+
+# ── Experiment tracking & pipeline ────────────────────────────────────────────
+mlflow>=2.14
+dvc>=3.50
+
+# ── Embeddings (used in NB02 feature analysis) ────────────────────────────────
+sentence-transformers>=2.7
+
+# ── Serialisation ─────────────────────────────────────────────────────────────
+joblib>=1.4
+
+# ── Modelos adicionais ────────────────────────────────────────────────────────
+xgboost>=2.0
+statsmodels>=0.14

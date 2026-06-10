@@ -1,0 +1,215 @@
+stages:
+  eda:
+    cmd: python src/pipeline/eda_report.py
+    deps:
+      - data/raw/registros_seguranca.parquet
+      - src/pipeline/eda_report.py
+      - src/analysis/eda.py
+      - configs/eda.yaml
+    params:
+      - params.yaml:
+          - base.random_seed
+          - base.class_order
+    outs:
+      - reports/eda_report.json
+      - reports/figures/eda/
+
+  feature_analysis:
+    cmd: python src/pipeline/feature_analysis.py
+    deps:
+      - data/processed/train.parquet
+      - src/pipeline/feature_analysis.py
+      - src/features/analysis.py
+      - src/features/build.py
+      - configs/eda.yaml
+    params:
+      - params.yaml:
+          - base.random_seed
+          - features
+    outs:
+      - reports/feature_report.json
+      - reports/figures/features/
+
+  train_classic:
+    cmd: python src/pipeline/train_classic.py
+    deps:
+      - data/processed/train.parquet
+      - src/pipeline/train_classic.py
+      - src/features/build.py
+      - src/models/classic.py
+      - src/models/train.py
+      - src/evaluation/metrics.py
+    params:
+      - params.yaml:
+          - base
+          - features
+          - models
+          - cv
+          - mlflow
+    metrics:
+      - reports/metrics_classic.json:
+          cache: false
+    outs:
+      - models/classic/best_model.joblib
+      - reports/figures/classic/
+
+  train_spacy:
+    cmd: python src/pipeline/train_spacy.py
+    deps:
+      - data/processed/train.parquet
+      - data/processed/test.parquet
+      - src/pipeline/train_spacy.py
+      - src/models/spacy_model.py
+      - src/evaluation/metrics.py
+      - src/features/build.py
+      - configs/spacy.yaml
+    params:
+      - params.yaml:
+          - base
+          - features
+          - eace
+          - mlflow
+          - spacy
+    metrics:
+      - reports/metrics_spacy.json:
+          cache: false
+    outs:
+      - models/spacy/textcat/
+      - models/spacy/rule_based_cfg.json
+      - reports/figures/spacy/
+
+  explain_classic:
+    cmd: python src/pipeline/explain_classic.py
+    deps:
+      - data/processed/test.parquet
+      - src/pipeline/explain_classic.py
+      - src/features/build.py
+      - src/evaluation/metrics.py
+      - models/classic/best_business.joblib
+      - configs/eda.yaml
+    params:
+      - params.yaml:
+          - base
+          - features
+    metrics:
+      - reports/shap_classic.json:
+          cache: false
+    outs:
+      - reports/figures/classic/shap_beeswarm.png
+      - reports/figures/classic/shap_bar_critico.png
+
+  train_hybrid:
+    cmd: python src/pipeline/train_hybrid.py
+    deps:
+      - data/processed/train.parquet
+      - data/processed/test.parquet
+      - src/pipeline/train_hybrid.py
+      - src/models/hybrid.py
+      - src/models/spacy_model.py
+      - src/evaluation/metrics.py
+      - src/features/build.py
+      - models/classic/best_business.joblib
+      - models/spacy/textcat/
+    params:
+      - params.yaml:
+          - base
+          - features
+          - eace
+          - mlflow
+          - hybrid
+    metrics:
+      - reports/metrics_hybrid.json:
+          cache: false
+    outs:
+      - models/hybrid/stack_meta.joblib
+      - reports/figures/hybrid/
+      - reports/hybrid_selection_report.json
+
+  train_spacy_deep:
+    cmd: python src/pipeline/train_spacy_deep.py
+    deps:
+      - data/processed/train.parquet
+      - data/processed/test.parquet
+      - src/pipeline/train_spacy_deep.py
+      - src/models/spacy_model.py
+      - src/models/hybrid.py
+      - src/evaluation/metrics.py
+      - src/features/build.py
+      - configs/spacy.yaml
+      - models/spacy/textcat/
+      - models/classic/best_business.joblib
+    params:
+      - params.yaml:
+          - base
+          - features
+          - eace
+          - mlflow
+          - spacy.textcat_deep
+          - spacy.optimizer
+          - spacy.critico_threshold
+          - spacy.base_model
+          - hybrid
+    metrics:
+      - reports/metrics_spacy_deep.json:
+          cache: false
+      - reports/metrics_hybrid_deep.json:
+          cache: false
+    outs:
+      - models/spacy/textcat_deep/
+      - models/hybrid_deep/
+      - reports/figures/spacy_deep/
+      - reports/figures/hybrid_deep/
+
+  train_hybrid_full:
+    cmd: python src/pipeline/train_hybrid_full.py
+    deps:
+      - data/processed/train.parquet
+      - data/processed/test.parquet
+      - src/pipeline/train_hybrid_full.py
+      - src/models/hybrid.py
+      - src/models/spacy_model.py
+      - src/evaluation/metrics.py
+      - src/features/build.py
+      - models/classic/best_business.joblib
+      - models/spacy/textcat/
+      - models/spacy/textcat_deep/
+    params:
+      - params.yaml:
+          - base
+          - features
+          - eace
+          - mlflow
+          - hybrid
+    metrics:
+      - reports/metrics_hybrid_full.json:
+          cache: false
+    outs:
+      - models/hybrid_full/
+      - reports/figures/hybrid_full/
+      - reports/hybrid_full_selection_report.json
+
+  analyze_unannotated:
+    cmd: python src/pipeline/analyze_unannotated.py
+    deps:
+      - src/pipeline/analyze_unannotated.py
+      - src/models/hybrid.py
+      - src/models/spacy_model.py
+      - src/features/build.py
+      - configs/eda.yaml
+      - models/classic/best_business.joblib
+      - models/spacy/textcat/
+      - models/spacy/textcat_deep/
+      - models/hybrid/stack_meta.joblib
+      - models/hybrid_full/triple_stack_meta.joblib
+    params:
+      - params.yaml:
+          - base
+          - features
+          - eace
+          - hybrid
+          - unannotated
+    metrics:
+      - reports/unannotated_recovery.json:
+          cache: false
+    outs:
+      - reports/figures/unannotated/

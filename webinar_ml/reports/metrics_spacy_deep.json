@@ -1,0 +1,10 @@
+{
+  "tok2vec__recall_critico": 0.5972,
+  "tok2vec__f1_macro": 0.721,
+  "tok2vec__accuracy": 0.7839,
+  "tok2vec__f1_critico": 0.5309,
+  "tok2vec__eace_brl": 1020490671.16,
+  "tok2vec__threshold": 0.1,
+  "bow__recall_critico": 0.5556,
+  "bow__f1_macro": 0.6821
+}

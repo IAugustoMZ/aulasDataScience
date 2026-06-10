@@ -1,0 +1,312 @@
+{
+  "max_cee_brl": 50000,
+  "n_unannotated": 1024,
+  "models": [
+    {
+      "model": "ml_classico",
+      "n_total": 1024,
+      "n_recovered": 863,
+      "n_abstain": 161,
+      "recovery_rate_pct": 84.3,
+      "class_distribution": {
+        "baixo": {
+          "count": 416,
+          "pct_recovered": 48.2
+        },
+        "medio": {
+          "count": 331,
+          "pct_recovered": 38.4
+        },
+        "alto": {
+          "count": 114,
+          "pct_recovered": 13.2
+        },
+        "critico": {
+          "count": 2,
+          "pct_recovered": 0.2
+        }
+      },
+      "cee_recovered": {
+        "mean": 11933.0,
+        "median": 8676.0,
+        "max": 49541.0
+      },
+      "cee_abstained": {
+        "mean": 294853.0,
+        "min": 50745.0
+      }
+    },
+    {
+      "model": "spacy_textcat",
+      "n_total": 1024,
+      "n_recovered": 969,
+      "n_abstain": 55,
+      "recovery_rate_pct": 94.6,
+      "class_distribution": {
+        "baixo": {
+          "count": 399,
+          "pct_recovered": 41.2
+        },
+        "medio": {
+          "count": 353,
+          "pct_recovered": 36.4
+        },
+        "alto": {
+          "count": 171,
+          "pct_recovered": 17.6
+        },
+        "critico": {
+          "count": 46,
+          "pct_recovered": 4.7
+        }
+      },
+      "cee_recovered": {
+        "mean": 3943.0,
+        "median": 483.0,
+        "max": 49417.0
+      },
+      "cee_abstained": {
+        "mean": 364213.0,
+        "min": 50441.0
+      }
+    },
+    {
+      "model": "hibrido_override",
+      "n_total": 1024,
+      "n_recovered": 928,
+      "n_abstain": 96,
+      "recovery_rate_pct": 90.6,
+      "class_distribution": {
+        "baixo": {
+          "count": 405,
+          "pct_recovered": 43.6
+        },
+        "medio": {
+          "count": 326,
+          "pct_recovered": 35.1
+        },
+        "alto": {
+          "count": 104,
+          "pct_recovered": 11.2
+        },
+        "critico": {
+          "count": 93,
+          "pct_recovered": 10.0
+        }
+      },
+      "cee_recovered": {
+        "mean": 10517.0,
+        "median": 7431.0,
+        "max": 49541.0
+      },
+      "cee_abstained": {
+        "mean": 270972.0,
+        "min": 50745.0
+      }
+    },
+    {
+      "model": "hibrido_weighted",
+      "n_total": 1024,
+      "n_recovered": 921,
+      "n_abstain": 103,
+      "recovery_rate_pct": 89.9,
+      "class_distribution": {
+        "baixo": {
+          "count": 405,
+          "pct_recovered": 44.0
+        },
+        "medio": {
+          "count": 352,
+          "pct_recovered": 38.2
+        },
+        "alto": {
+          "count": 155,
+          "pct_recovered": 16.8
+        },
+        "critico": {
+          "count": 9,
+          "pct_recovered": 1.0
+        }
+      },
+      "cee_recovered": {
+        "mean": 8276.0,
+        "median": 4596.0,
+        "max": 49983.0
+      },
+      "cee_abstained": {
+        "mean": 251299.0,
+        "min": 51687.0
+      }
+    },
+    {
+      "model": "hibrido_stack",
+      "n_total": 1024,
+      "n_recovered": 960,
+      "n_abstain": 64,
+      "recovery_rate_pct": 93.8,
+      "class_distribution": {
+        "baixo": {
+          "count": 394,
+          "pct_recovered": 41.0
+        },
+        "medio": {
+          "count": 340,
+          "pct_recovered": 35.4
+        },
+        "alto": {
+          "count": 170,
+          "pct_recovered": 17.7
+        },
+        "critico": {
+          "count": 56,
+          "pct_recovered": 5.8
+        }
+      },
+      "cee_recovered": {
+        "mean": 5651.0,
+        "median": 3013.0,
+        "max": 45086.0
+      },
+      "cee_abstained": {
+        "mean": 373541.0,
+        "min": 51394.0
+      }
+    },
+    {
+      "model": "spacy_tok2vec",
+      "n_total": 1024,
+      "n_recovered": 971,
+      "n_abstain": 53,
+      "recovery_rate_pct": 94.8,
+      "class_distribution": {
+        "baixo": {
+          "count": 402,
+          "pct_recovered": 41.4
+        },
+        "medio": {
+          "count": 361,
+          "pct_recovered": 37.2
+        },
+        "alto": {
+          "count": 174,
+          "pct_recovered": 17.9
+        },
+        "critico": {
+          "count": 34,
+          "pct_recovered": 3.5
+        }
+      },
+      "cee_recovered": {
+        "mean": 3813.0,
+        "median": 1209.0,
+        "max": 46891.0
+      },
+      "cee_abstained": {
+        "mean": 217420.0,
+        "min": 50253.0
+      }
+    },
+    {
+      "model": "triple_override_deep",
+      "n_total": 1024,
+      "n_recovered": 926,
+      "n_abstain": 98,
+      "recovery_rate_pct": 90.4,
+      "class_distribution": {
+        "baixo": {
+          "count": 413,
+          "pct_recovered": 44.6
+        },
+        "medio": {
+          "count": 329,
+          "pct_recovered": 35.5
+        },
+        "alto": {
+          "count": 108,
+          "pct_recovered": 11.7
+        },
+        "critico": {
+          "count": 76,
+          "pct_recovered": 8.2
+        }
+      },
+      "cee_recovered": {
+        "mean": 10733.0,
+        "median": 7775.0,
+        "max": 49541.0
+      },
+      "cee_abstained": {
+        "mean": 280244.0,
+        "min": 50745.0
+      }
+    },
+    {
+      "model": "triple_weighted_avg",
+      "n_total": 1024,
+      "n_recovered": 931,
+      "n_abstain": 93,
+      "recovery_rate_pct": 90.9,
+      "class_distribution": {
+        "baixo": {
+          "count": 415,
+          "pct_recovered": 44.6
+        },
+        "medio": {
+          "count": 351,
+          "pct_recovered": 37.7
+        },
+        "alto": {
+          "count": 161,
+          "pct_recovered": 17.3
+        },
+        "critico": {
+          "count": 4,
+          "pct_recovered": 0.4
+        }
+      },
+      "cee_recovered": {
+        "mean": 8717.0,
+        "median": 4819.0,
+        "max": 48862.0
+      },
+      "cee_abstained": {
+        "mean": 228140.0,
+        "min": 50269.0
+      }
+    },
+    {
+      "model": "triple_stack",
+      "n_total": 1024,
+      "n_recovered": 641,
+      "n_abstain": 383,
+      "recovery_rate_pct": 62.6,
+      "class_distribution": {
+        "baixo": {
+          "count": 182,
+          "pct_recovered": 28.4
+        },
+        "medio": {
+          "count": 394,
+          "pct_recovered": 61.5
+        },
+        "alto": {
+          "count": 65,
+          "pct_recovered": 10.1
+        },
+        "critico": {
+          "count": 0,
+          "pct_recovered": 0.0
+        }
+      },
+      "cee_recovered": {
+        "mean": 3624.0,
+        "median": 1690.0,
+        "max": 48785.0
+      },
+      "cee_abstained": {
+        "mean": 214608.0,
+        "min": 50871.0
+      }
+    }
+  ]
+}

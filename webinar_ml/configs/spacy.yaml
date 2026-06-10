@@ -1,0 +1,116 @@
+# ============================================================
+# configs/spacy.yaml — padrões linguísticos para detecção de
+# incidentes críticos em FPSOs.
+#
+# Estrutura:
+#   critico_patterns  — termos que disparam flag de risco crítico
+#   negation_tokens   — tokens de negação (inibem o flag)
+#   class_hints       — pistas léxicas por classe (para debug/EDA)
+#
+# Os padrões são usados pelo spaCy Matcher no módulo
+# src/models/spacy_model.py e aplicados ANTES do textcat.
+# ============================================================
+
+# ── Padrões críticos ──────────────────────────────────────────────────────────
+# Qualquer hit = feature binária flag_critico=1 adicionada ao doc
+critico_patterns:
+  # Lesões com risco de vida
+  - [{"LOWER": {"IN": ["fatalidade", "óbito", "morte", "falecimento"]}}]
+  - [{"LOWER": "vítima"}, {"LOWER": {"IN": ["fatal", "grave"]}}]
+  - [{"LOWER": {"IN": ["amputação", "amputado", "amputada"]}}]
+  - [{"LOWER": {"IN": ["fratura", "fraturas"]}}, {"LOWER": {"IN": ["exposta", "expostas", "múltipla", "múltiplas"]}}]
+  - [{"LOWER": {"IN": ["queimadura", "queimaduras"]}}, {"LOWER": {"IN": ["grave", "graves", "terceiro", "3°"]}}]
+  - [{"LOWER": {"IN": ["inconsciência", "inconsciente", "inconscientes"]}}]
+  - [{"LOWER": "trauma"}, {"LOWER": {"IN": ["craniano", "cranianos", "craniana", "encefálico"]}}]
+  - [{"LOWER": {"IN": ["hospitalização", "hospitalizado", "hospitalizada", "uti", "utt"]}}]
+
+  # Explosão / incêndio
+  - [{"LOWER": {"IN": ["explosão", "explosões", "explodiu", "detonação"]}}]
+  - [{"LOWER": {"IN": ["incêndio", "incêndios"]}}, {"LOWER": {"IN": ["descontrolado", "incontrolável", "alastra"]}, "OP": "?"}]
+  - [{"LOWER": {"IN": ["chama", "chamas"]}}, {"LOWER": {"IN": ["descontrolada", "livre", "aberta"]}}]
+  - [{"LOWER": {"IN": ["bleve", "fireball"]}}]
+
+  # Vazamento crítico de gás/produto químico
+  - [{"LOWER": {"IN": ["vazamento", "derramamento"]}}, {"LOWER": {"IN": ["h2s", "hcl", "cl2", "nh3", "so2", "cloro", "amônia"]}}]
+  - [{"LOWER": "concentração"}, {"LOWER": {"IN": ["letal", "tóxica", "perigosa"]}}]
+  - [{"LOWER": {"IN": ["h2s", "sulfeto"]}}, {"LOWER": {"IN": ["detectado", "detectada", "detectados", "detecção", "alarme"]}}]
+  - [{"LOWER": {"IN": ["evacuação", "evacuado", "evacuados", "evacuada"]}}]
+
+  # Queda de altura / colapso estrutural
+  - [{"LOWER": {"IN": ["queda", "quedas"]}}, {"LOWER": {"IN": ["altura", "andaime", "plataforma", "convés"]}}, {"OP": "?"}]
+  - [{"LOWER": {"IN": ["colapso", "desabamento", "desabou", "colapsou"]}}]
+  - [{"LOWER": {"IN": ["tombamento"]}}, {"LOWER": {"IN": ["guindaste", "carga", "equipamento"]}}]
+
+  # Falha crítica de contenção
+  - [{"LOWER": "perda"}, {"LOWER": "de"}, {"LOWER": {"IN": ["contenção", "controle", "pressão"]}}]
+  - [{"LOWER": {"IN": ["blowout", "kick"]}}, {"LOWER": {"IN": ["incontrolável", "não", "confirmado"]}, "OP": "?"}]
+  - [{"LOWER": {"IN": ["sobrepressão", "ruptura"]}}, {"LOWER": {"IN": ["vaso", "tubulação", "linha"]}}]
+
+  # Eletricidade — arco / choque grave
+  - [{"LOWER": {"IN": ["arco", "arcos"]}}, {"LOWER": "elétrico"}]
+  - [{"LOWER": {"IN": ["choque", "eletrocussão", "eletrocutado"]}}]
+  - [{"LOWER": {"IN": ["curto-circuito", "curto"]}}, {"LOWER": {"IN": ["grave", "crítico", "fogo", "incêndio"]}}]
+
+  # Termos de severidade explícita
+  - [{"LOWER": {"IN": ["crítico", "crítica", "critico", "critica"]}}, {"LOWER": {"IN": ["risco", "situação", "condição", "evento"]}}]
+  - [{"LOWER": "risco"}, {"LOWER": {"IN": ["iminente", "imediato"]}}]
+  - [{"LOWER": "emergência"}, {"LOWER": {"IN": ["nível", "grau"]}, "OP": "?"}, {"LOWER": {"IN": ["3", "iii", "máximo", "total"]}, "OP": "?"}]
+
+# ── Tokens de negação (inibem um flag imediatamente anterior) ─────────────────
+negation_tokens:
+  - não
+  - nenhum
+  - nenhuma
+  - sem
+  - descartado
+  - descartada
+  - controlado
+  - controlada
+  - evitado
+  - evitada
+  - prevenido
+  - prevenida
+  - suspeita
+  - possível
+  - potencial
+  - hipotético
+
+# ── Pistas léxicas por classe (usadas só para EDA / análise) ──────────────────
+class_hints:
+  baixo:
+    - quase-acidente
+    - near-miss
+    - observação
+    - melhoria
+    - desvio
+    - inspeção
+    - limpeza
+    - manutenção
+    - preventiva
+  medio:
+    - contusão
+    - escoriação
+    - torção
+    - entorse
+    - corte
+    - lacerção
+    - pequeno
+    - leve
+    - moderado
+  alto:
+    - fratura
+    - queimadura
+    - intoxicação
+    - afastamento
+    - internação
+    - hospitalar
+    - grave
+  critico:
+    - fatalidade
+    - óbito
+    - explosão
+    - incêndio
+    - evacuação
+    - h2s
+    - blowout
+    - amputação

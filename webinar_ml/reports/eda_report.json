@@ -1,0 +1,25 @@
+{
+  "total_records": 5000,
+  "annotated": 3976,
+  "unannotated": 1024,
+  "annotation_coverage": 0.7952,
+  "mislabeled": 319,
+  "ambiguous": 187,
+  "class_counts": {
+    "baixo": 1485,
+    "medio": 1387,
+    "alto": 742,
+    "critico": 362
+  },
+  "class_fractions": {
+    "baixo": 0.3735,
+    "medio": 0.3488,
+    "alto": 0.1866,
+    "critico": 0.091
+  },
+  "imbalance_ratio": 4.1,
+  "train_size": 3180,
+  "test_size": 796,
+  "text_length_mean": 65.5,
+  "text_length_std": 10.0
+}

@@ -1,0 +1,247 @@
+# ============================================================
+# Risk Label Taxonomy — FPSO Industrial Safety Records
+# Aligned with NR-10, NR-33, NR-35 (Brazilian safety norms)
+# ============================================================
+
+risk_classes:
+  - id: baixo
+    label: "Baixo"
+    description: "Situação controlada, sem potencial de lesão ou dano material significativo"
+    severity_score: 1
+  - id: medio
+    label: "Médio"
+    description: "Situação com potencial de lesão leve ou dano material moderado, requer monitoramento"
+    severity_score: 2
+  - id: alto
+    label: "Alto"
+    description: "Situação com potencial de lesão grave ou dano material severo, requer ação imediata"
+    severity_score: 3
+  - id: critico
+    label: "Crítico"
+    description: "Situação com potencial de fatalidade, explosão, incêndio ou colapso estrutural"
+    severity_score: 4
+
+# ============================================================
+# FPSO Areas (Áreas da plataforma)
+# ============================================================
+fpso_areas:
+  - id: convés_principal
+    label: "Convés Principal"
+    risk_weight: 1.2
+  - id: praça_de_máquinas
+    label: "Praça de Máquinas"
+    risk_weight: 1.5
+  - id: módulo_de_processo
+    label: "Módulo de Processo"
+    risk_weight: 2.0
+  - id: área_de_utilidades
+    label: "Área de Utilidades"
+    risk_weight: 1.1
+  - id: alojamento
+    label: "Alojamento"
+    risk_weight: 0.8
+  - id: sala_de_controle
+    label: "Sala de Controle"
+    risk_weight: 0.7
+  - id: moonpool
+    label: "Moonpool"
+    risk_weight: 1.8
+  - id: deck_de_perfuração
+    label: "Deck de Perfuração"
+    risk_weight: 2.2
+  - id: turret
+    label: "Turret / Sistema de Ancoragem"
+    risk_weight: 2.0
+  - id: area_offloading
+    label: "Área de Offloading"
+    risk_weight: 1.6
+  - id: cais_de_barcos
+    label: "Cais de Barcos / Embarque"
+    risk_weight: 1.4
+  - id: topo_das_torres
+    label: "Topo das Torres / Flare"
+    risk_weight: 1.9
+
+# ============================================================
+# Equipment Classes and Subclasses
+# ============================================================
+equipment:
+  elevacao:
+    label: "Elevação e Içamento"
+    subclasses:
+      - guindaste
+      - talha_manual
+      - talha_eletrica
+      - andaime
+      - cesto_de_içamento
+      - munck
+
+  eletrico:
+    label: "Sistemas Elétricos"
+    subclasses:
+      - painel_eletrico
+      - transformador
+      - gerador
+      - cabo_de_alta_tensao
+      - subestacao
+      - aterramento
+
+  instrumentacao:
+    label: "Instrumentação e Controle"
+    subclasses:
+      - sensor_de_gas
+      - detector_de_chama
+      - valvula_de_controle
+      - transmissor_de_pressao
+      - transmissor_de_nivel
+      - sistema_scada
+
+  rotativo:
+    label: "Equipamentos Rotativos"
+    subclasses:
+      - bomba_centrifuga
+      - compressor
+      - turbina_a_gas
+      - motor_diesel
+      - ventilador
+      - agitador
+
+  vaso_pressao:
+    label: "Vasos de Pressão e Tubulação"
+    subclasses:
+      - separador
+      - vaso_flash
+      - trocador_de_calor
+      - tubulacao_processo
+      - mangote_de_transferencia
+      - manifold
+
+  estrutural:
+    label: "Estrutura e Civil"
+    subclasses:
+      - deck_estrutural
+      - suporte_de_tubulacao
+      - escada_marinheiro
+      - guarda_corpo
+      - porta_corta_fogo
+      - casco
+
+  protecao_incendio:
+    label: "Proteção Contra Incêndio"
+    subclasses:
+      - extintor
+      - sprinkler
+      - detector_de_fumaca
+      - painel_de_alarme
+      - sistema_diluvio
+      - mangueira_incendio
+
+  mergulho_submarino:
+    label: "Mergulho e Subsea"
+    subclasses:
+      - umbilical
+      - ROV
+      - sistema_saturation_diving
+      - boia_de_sinalizacao
+      - ancora
+      - risers
+
+# ============================================================
+# Chemical Products (Produtos Químicos)
+# ============================================================
+chemical_products:
+  - id: oleo_cru
+    label: "Óleo Cru"
+    hazard_class: "inflamável"
+    cas: "N/A"
+  - id: gas_natural
+    label: "Gás Natural"
+    hazard_class: "inflamável_explosivo"
+    cas: "8006-14-2"
+  - id: h2s
+    label: "Gás Sulfídrico (H₂S)"
+    hazard_class: "tóxico_letal"
+    cas: "7783-06-4"
+  - id: metanol
+    label: "Metanol"
+    hazard_class: "tóxico_inflamável"
+    cas: "67-56-1"
+  - id: glicol
+    label: "Monoetilenoglicol (MEG)"
+    hazard_class: "irritante"
+    cas: "107-21-1"
+  - id: hipoclorito
+    label: "Hipoclorito de Sódio"
+    hazard_class: "corrosivo_oxidante"
+    cas: "7681-52-9"
+  - id: diesel
+    label: "Diesel Marítimo"
+    hazard_class: "inflamável"
+    cas: "68476-34-6"
+  - id: nitrogenio
+    label: "Nitrogênio (N₂)"
+    hazard_class: "asfixiante"
+    cas: "7727-37-9"
+  - id: amonia
+    label: "Amônia (NH₃)"
+    hazard_class: "tóxico_corrosivo"
+    cas: "7664-41-7"
+  - id: acido_sulfurico
+    label: "Ácido Sulfúrico"
+    hazard_class: "corrosivo"
+    cas: "7664-93-9"
+  - id: nenhum
+    label: "N/A"
+    hazard_class: "nenhum"
+    cas: "N/A"
+
+# ============================================================
+# Incident Types (Tipos de Ocorrência)
+# ============================================================
+incident_types:
+  - near_miss
+  - acidente_com_lesao
+  - acidente_sem_lesao
+  - quase_acidente
+  - falha_de_equipamento
+  - vazamento
+  - incendio
+  - explosao
+  - condicao_insegura
+  - ato_inseguro
+  - emergencia_medica
+  - dano_ambiental
+
+# ============================================================
+# Risk Factors (Fatores de Risco) — NR-based
+# ============================================================
+risk_factors:
+  fisico:
+    - ruido
+    - vibracao
+    - calor
+    - radiacao_nao_ionizante
+    - pressao_anormal
+    - frio
+  quimico:
+    - gas_toxico
+    - vapores_inflamaveis
+    - particulas_em_suspensao
+    - neblinas_acidas
+    - poeiras_minerais
+  biologico:
+    - microorganismos
+    - insetos
+    - fungos
+  ergonomico:
+    - postura_inadequada
+    - esforco_repetitivo
+    - levantamento_manual_de_carga
+    - jornada_prolongada
+  acidente:
+    - queda_de_altura
+    - choque_eletrico
+    - aprisionamento
+    - projecao_de_fragmentos
+    - atropelamento
+    - queimadura

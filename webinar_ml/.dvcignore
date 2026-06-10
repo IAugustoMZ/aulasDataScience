@@ -1,0 +1,9 @@
+# Arquivos ignorados pelo DVC (não tracked como deps/outs)
+__pycache__
+*.pyc
+*.pyo
+.ipynb_checkpoints
+*.egg-info
+.env
+mlruns/
+mlflow.db

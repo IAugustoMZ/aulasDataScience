@@ -1,0 +1,196 @@
+schema: '2.0'
+stages:
+  eda:
+    cmd: python src/pipeline/eda_report.py
+    deps:
+    - path: configs/eda.yaml
+      hash: md5
+      md5: d1cff627c4c66970a58ee64587c5b3ed
+      size: 5095
+    - path: data/raw/registros_seguranca.parquet
+      hash: md5
+      md5: 1984ab5d03fc7190154041b47b26d134
+      size: 930845
+    - path: src/analysis/eda.py
+      hash: md5
+      md5: e8c53c48a0bd8dd7e974a2e25b564335
+      size: 26050
+    - path: src/pipeline/eda_report.py
+      hash: md5
+      md5: 46572bf37e588262c3dfddd0104c3f19
+      size: 4459
+    params:
+      params.yaml:
+        base.class_order:
+        - baixo
+        - medio
+        - alto
+        - critico
+        base.random_seed: 42
+    outs:
+    - path: reports/eda_report.json
+      hash: md5
+      md5: e2e412078ddd1d2a4c4bbe0aff172dc2
+      size: 502
+    - path: reports/figures/eda/
+      hash: md5
+      md5: 03596e7e7c01285a364b74f692122bbb.dir
+      size: 923597
+      nfiles: 12
+  feature_analysis:
+    cmd: python src/pipeline/feature_analysis.py
+    deps:
+    - path: configs/eda.yaml
+      hash: md5
+      md5: d1cff627c4c66970a58ee64587c5b3ed
+      size: 5095
+    - path: data/processed/train.parquet
+      hash: md5
+      md5: 32d1cc7cb48dc45b9b3090ed2b34c79f
+      size: 600305
+    - path: src/features/analysis.py
+      hash: md5
+      md5: f5c3db1fc6bd59dcb08c3c7c759a163c
+      size: 24464
+    - path: src/features/build.py
+      hash: md5
+      md5: ad98dc3a3839b58bd1747b8c5f09b375
+      size: 3357
+    - path: src/pipeline/feature_analysis.py
+      hash: md5
+      md5: 61e04ec9bd82a6fc5c73ce5a10052994
+      size: 3598
+    params:
+      params.yaml:
+        base.random_seed: 42
+        features:
+          text_col: relato
+          tfidf:
+            max_features: 20000
+            ngram_range:
+            - 1
+            - 2
+            min_df: 3
+            sublinear_tf: true
+          categorical:
+          - fator_risco
+          - area_fpso
+          numeric:
+          - n_palavras
+          - hora_sin
+          - hora_cos
+          - passagem_turno
+    outs:
+    - path: reports/feature_report.json
+      hash: md5
+      md5: b71d14a4b588ea19c15d2d9fc8644c58
+      size: 597
+    - path: reports/figures/features/
+      hash: md5
+      md5: 2e6c689873849f0d589484928109de02.dir
+      size: 311803
+      nfiles: 4
+  train_classic:
+    cmd: python src/pipeline/train_classic.py
+    deps:
+    - path: data/processed/train.parquet
+      hash: md5
+      md5: e353c9574685090e0c50bb607ef8966f
+      size: 5954321
+    - path: src/evaluation/metrics.py
+      hash: md5
+      md5: 108b06d4c4a1c47690667d0869472ae3
+      size: 4787
+    - path: src/features/build.py
+      hash: md5
+      md5: ad98dc3a3839b58bd1747b8c5f09b375
+      size: 3357
+    - path: src/models/classic.py
+      hash: md5
+      md5: 5d7d160e777d7df34e1924d4aa14bd84
+      size: 2141
+    - path: src/models/train.py
+      hash: md5
+      md5: 65bfc9575d598f1ea2473666ecf89a52
+      size: 3692
+    - path: src/pipeline/train_classic.py
+      hash: md5
+      md5: d94aa67ea6dd0fe532414714301aab37
+      size: 5350
+    params:
+      params.yaml:
+        base:
+          random_seed: 42
+          target_col: classe_risco
+          class_order:
+          - baixo
+          - medio
+          - alto
+          - critico
+        cv:
+          n_splits: 5
+          scoring: f1_macro
+          n_jobs: -1
+          verbose: 1
+          n_iter_random: 10
+        features:
+          text_col: relato
+          tfidf:
+            max_features: 20000
+            ngram_range:
+            - 1
+            - 2
+            min_df: 3
+            sublinear_tf: true
+          categorical:
+          - fator_risco
+          - area_fpso
+          numeric:
+          - n_palavras
+          - hora_sin
+          - hora_cos
+          - passagem_turno
+        mlflow:
+          experiment_name: webinar_ml_classic_baselines
+          tracking_uri: sqlite:///mlflow.db
+          primary_metric: recall_critico
+        models:
+          logistic_regression:
+            C:
+            - 0.1
+            - 1.0
+            - 10.0
+            max_iter: 1000
+            class_weight: balanced
+            solver: lbfgs
+          linear_svc:
+            C:
+            - 0.1
+            - 1.0
+            - 10.0
+            max_iter: 2000
+            class_weight: balanced
+          random_forest:
+            n_estimators:
+            - 100
+            - 200
+            max_depth:
+            - 
+            - 10
+            - 20
+            min_samples_leaf: 2
+            class_weight: balanced
+    outs:
+    - path: models/classic/best_model.joblib
+      hash: md5
+      md5: 54b3cd23d77ae65a6d588ad93a705dd5
+      size: 718233
+    - path: reports/figures/classic/
+      hash: md5
+      md5: 29d0f5fc471e461cbe2c2592da2d406f.dir
+      size: 34863
+      nfiles: 1
+    - path: reports/metrics_classic.json
+      hash: md5
+      md5: 421145b13c6f97a1ccd651f189823a8c
+      size: 1948
